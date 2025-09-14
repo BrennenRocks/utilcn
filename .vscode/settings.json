@@ -1,4 +1,8 @@
 {
   "editor.defaultFormatter": "biomejs.biome",
-  "markdown.validate.enabled": true
+  "markdown.validate.enabled": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit",
+    "source.fixAll.biome": "explicit"
+  }
 }

@@ -8,7 +8,8 @@
     "start": "next start",
     "postinstall": "fumadocs-mdx",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "registry:build": "shadcn build"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -21,11 +22,13 @@
     "radix-ui": "^1.4.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "shadcn": "^3.2.1",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
     "@tailwindcss/postcss": "^4.1.13",
+    "@types/bun": "^1.2.21",
     "@types/mdx": "^2.0.13",
     "@types/node": "^24.3.3",
     "@types/react": "^19.1.13",
