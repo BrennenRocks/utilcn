@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "to-pascal-case",
+  "type": "registry:lib",
+  "title": "To Pascal Case",
+  "description": "Convert a string to PascalCase.",
+  "files": [
+    {
+      "path": "registry/default/strings/to-pascal-case.ts",
+      "content": "/**\n * Converts a string to PascalCase.\n *\n * Handles acronyms properly, ensuring that something like\n * \"XMLHttpRequest\" becomes \"XmlHttpRequest\".\n *\n * @param str - The input string.\n * @returns The PascalCased string.\n *\n * @example\n * toPascalCase(\"hello world-example\"); // \"HelloWorldExample\"\n * toPascalCase(\"XMLHttpRequest\"); // \"XmlHttpRequest\"\n */\nexport function toPascalCase(str: string): string {\n  return (\n    str\n      // Split acronym groups into proper boundaries\n      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')\n      // Split between lowercase/digit and uppercase\n      .replace(/([a-z\\d])([A-Z])/g, '$1 $2')\n      // Normalize spaces/underscores/dashes\n      .replace(/[-_\\s]+/g, ' ')\n      // Lowercase all to normalize\n      .toLowerCase()\n      // Capitalize every word\n      .replace(/\\b\\w/g, (c) => c.toUpperCase())\n      // Remove spaces\n      .replace(/\\s+/g, '')\n  );\n}\n",
+      "type": "registry:lib"
+    }
+  ]
+}

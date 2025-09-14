@@ -1,0 +1,54 @@
+---
+title: capitalizeAll
+description: Capitalizes the first letter of every word in a string
+---
+
+# capitalizeAll
+
+Capitalizes the first letter of every word in a string (title case).
+
+## Usage
+
+```typescript
+import { capitalizeAll } from '@/registry/default/strings/capitalize-all';
+
+const result = capitalizeAll("hello world");
+console.log(result); // "Hello World"
+```
+
+## Parameters
+
+| Parameter | Type     | Description      |
+|-----------|----------|------------------|
+| `str`     | `string` | The input string |
+
+## Returns
+
+`string` - The title-cased string.
+
+## Examples
+
+```typescript
+capitalizeAll("hello world"); // "Hello World"
+capitalizeAll("the quick brown fox"); // "The Quick Brown Fox"
+capitalizeAll("javascript is awesome"); // "Javascript Is Awesome"
+capitalizeAll("multiple   spaces"); // "Multiple   Spaces"
+```
+
+## Implementation
+
+```typescript
+export function capitalizeAll(str: string): string {
+  return str.replace(
+    /(^|\s)(\S)/g,
+    (_, space, char) => space + char.toUpperCase(),
+  );
+}
+```
+
+## How It Works
+
+The function uses a regular expression `/(^|\s)(\S)/g` to:
+- Match the beginning of the string (`^`) or any whitespace character (`\s`)
+- Followed by any non-whitespace character (`\S`)
+- Capitalizes each matched non-whitespace character while preserving the original spacing

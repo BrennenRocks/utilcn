@@ -1,0 +1,72 @@
+---
+title: toPascalCase
+description: Converts a string to PascalCase with proper acronym handling
+---
+
+# toPascalCase
+
+Converts a string to PascalCase. Handles acronyms properly, ensuring that something like "XMLHttpRequest" becomes "XmlHttpRequest".
+
+## Usage
+
+```typescript
+import { toPascalCase } from '@/registry/default/strings/to-pascal-case';
+
+const result = toPascalCase("hello world-example");
+console.log(result); // "HelloWorldExample"
+```
+
+## Parameters
+
+| Parameter | Type     | Description      |
+|-----------|----------|------------------|
+| `str`     | `string` | The input string |
+
+## Returns
+
+`string` - The PascalCased string.
+
+## Examples
+
+```typescript
+toPascalCase("hello world-example"); // "HelloWorldExample"
+toPascalCase("XMLHttpRequest"); // "XmlHttpRequest"
+toPascalCase("user_name"); // "UserName"
+toPascalCase("api-response"); // "ApiResponse"
+toPascalCase("HTML parser"); // "HtmlParser"
+```
+
+## Implementation
+
+```typescript
+export function toPascalCase(str: string): string {
+  return (
+    str
+      // Split acronym groups into proper boundaries
+      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+      // Split between lowercase/digit and uppercase
+      .replace(/([a-z\d])([A-Z])/g, '$1 $2')
+      // Normalize spaces/underscores/dashes
+      .replace(/[-_\s]+/g, ' ')
+      // Lowercase all to normalize
+      .toLowerCase()
+      // Capitalize every word
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+      // Remove spaces
+      .replace(/\s+/g, '')
+  );
+}
+```
+
+## Features
+
+- **Acronym Handling**: Properly handles consecutive uppercase letters (e.g., "XMLHttpRequest" → "XmlHttpRequest")
+- **Multiple Separators**: Handles spaces, hyphens, and underscores
+- **Mixed Case**: Converts mixed case strings correctly
+- **First Letter**: Ensures the first character is uppercase (PascalCase convention)
+
+## Difference from camelCase
+
+PascalCase is similar to camelCase, but the first letter is capitalized:
+- camelCase: `helloWorld`
+- PascalCase: `HelloWorld`

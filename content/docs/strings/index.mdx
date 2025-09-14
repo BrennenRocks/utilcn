@@ -1,0 +1,69 @@
+---
+title: String Utilities
+description: A collection of utility functions for string manipulation and transformation
+---
+
+# String Utilities
+
+A comprehensive collection of utility functions for string manipulation and transformation. These utilities handle common string operations with proper edge case handling and TypeScript support.
+
+## Available Functions
+
+### Case Conversion
+
+<Cards>
+  <Card title="capitalize" href="/docs/strings/capitalize">
+    Capitalizes the first character of a string
+  </Card>
+  <Card title="capitalizeAll" href="/docs/strings/capitalize-all">
+    Capitalizes the first letter of every word (title case)
+  </Card>
+  <Card title="toCamelCase" href="/docs/strings/to-camel-case">
+    Converts strings to camelCase with acronym handling
+  </Card>
+  <Card title="toPascalCase" href="/docs/strings/to-pascal-case">
+    Converts strings to PascalCase with acronym handling
+  </Card>
+  <Card title="toKebabCase" href="/docs/strings/to-kebab-case">
+    Converts strings to kebab-case
+  </Card>
+  <Card title="toSnakeCase" href="/docs/strings/to-snake-case">
+    Converts strings to snake_case
+  </Card>
+</Cards>
+
+### String Manipulation
+
+<Cards>
+  <Card title="repeatPad" href="/docs/strings/repeat-pad">
+    Pads a string evenly on both sides for centering
+  </Card>
+  <Card title="truncate" href="/docs/strings/truncate-string">
+    Truncates strings with ellipsis when they exceed length
+  </Card>
+  <Card title="reverseString" href="/docs/strings/reverse-string">
+    Reverses the characters in a string
+  </Card>
+</Cards>
+
+## Features
+
+- **TypeScript Support**: All functions are fully typed
+- **Edge Case Handling**: Proper handling of empty strings, special characters, and edge cases
+- **Acronym Support**: Case conversion functions properly handle acronyms (e.g., "XMLHttpRequest")
+- **Performance Optimized**: Efficient implementations using native JavaScript methods
+- **Zero Dependencies**: No external dependencies required
+
+## Installation
+
+These utilities are part of the utilcn registry. You can copy the individual functions you need into your project.
+
+## Usage Pattern
+
+All string utilities follow a consistent pattern:
+
+```typescript
+import { functionName } from '@/registry/default/strings/function-name';
+
+const result = functionName(inputString, ...additionalParams);
+```

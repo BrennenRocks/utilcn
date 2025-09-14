@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "to-kebab-case",
+  "type": "registry:lib",
+  "title": "To Kebab Case",
+  "description": "Convert a string to kebabCase.",
+  "files": [
+    {
+      "path": "registry/default/strings/to-kebab-case.ts",
+      "content": "/**\n * Converts a string to kebab-case.\n *\n * Handles acronyms and consecutive uppercase letters properly.\n * Example:\n *   \"XMLHttpRequest\" -> \"xml-http-request\"\n *\n * @param str - The input string.\n * @returns The kebab-cased string.\n *\n * @example\n * toKebabCase(\"Hello World Again\"); // \"hello-world-again\"\n * toKebabCase(\"XMLHttpRequest\"); // \"xml-http-request\"\n */\nexport function toKebabCase(str: string): string {\n  return (\n    str\n      // Split acronym groups (e.g. \"XMLHttp\" -> \"XML-Http\")\n      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')\n      // Split between a lowercase/digit and an uppercase (e.g. \"testHTTP\" -> \"test-HTTP\")\n      .replace(/([a-z\\d])([A-Z])/g, '$1-$2')\n      // Replace spaces and underscores with hyphens\n      .replace(/[\\s_]+/g, '-')\n      .toLowerCase()\n      // Remove leading and trailing hyphens\n      .replace(/^-+|-+$/g, '')\n  );\n}\n",
+      "type": "registry:lib"
+    }
+  ]
+}

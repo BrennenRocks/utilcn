@@ -1,0 +1,15 @@
+{
+  "title": "String Utilities",
+  "pages": [
+    "index",
+    "capitalize",
+    "capitalize-all",
+    "to-camel-case",
+    "to-pascal-case",
+    "to-kebab-case",
+    "to-snake-case",
+    "repeat-pad",
+    "truncate-string",
+    "reverse-string"
+  ]
+}

@@ -1,0 +1,72 @@
+---
+title: toKebabCase
+description: Converts a string to kebab-case with proper acronym handling
+---
+
+# toKebabCase
+
+Converts a string to kebab-case. Handles acronyms and consecutive uppercase letters properly.
+
+## Usage
+
+```typescript
+import { toKebabCase } from '@/registry/default/strings/to-kebab-case';
+
+const result = toKebabCase("Hello World Again");
+console.log(result); // "hello-world-again"
+```
+
+## Parameters
+
+| Parameter | Type     | Description      |
+|-----------|----------|------------------|
+| `str`     | `string` | The input string |
+
+## Returns
+
+`string` - The kebab-cased string.
+
+## Examples
+
+```typescript
+toKebabCase("Hello World Again"); // "hello-world-again"
+toKebabCase("XMLHttpRequest"); // "xml-http-request"
+toKebabCase("user_name"); // "user-name"
+toKebabCase("APIResponse"); // "api-response"
+toKebabCase("HTML Parser"); // "html-parser"
+```
+
+## Implementation
+
+```typescript
+export function toKebabCase(str: string): string {
+  return (
+    str
+      // Split acronym groups (e.g. "XMLHttp" -> "XML-Http")
+      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
+      // Split between a lowercase/digit and an uppercase (e.g. "testHTTP" -> "test-HTTP")
+      .replace(/([a-z\d])([A-Z])/g, '$1-$2')
+      // Replace spaces and underscores with hyphens
+      .replace(/[\s_]+/g, '-')
+      .toLowerCase()
+      // Remove leading and trailing hyphens
+      .replace(/^-+|-+$/g, '')
+  );
+}
+```
+
+## Features
+
+- **Acronym Handling**: Properly splits consecutive uppercase letters (e.g., "XMLHttp" → "xml-http")
+- **Multiple Separators**: Handles spaces and underscores, converting them to hyphens
+- **Mixed Case**: Converts mixed case strings correctly
+- **Clean Output**: Removes leading and trailing hyphens
+
+## Use Cases
+
+Kebab-case is commonly used for:
+- CSS class names
+- HTML attributes
+- URL slugs
+- File names
+- Command-line flags

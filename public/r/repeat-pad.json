@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "repeat-pad",
+  "type": "registry:lib",
+  "title": "Repeat Pad",
+  "description": "Repeat a string until it reaches the desired length.",
+  "files": [
+    {
+      "path": "registry/default/strings/repeat-pad.ts",
+      "content": "/**\n * Pads a string evenly on both sides until it reaches the desired length.\n *\n * @param str - The input string.\n * @param length - Desired total length.\n * @param pad - The character/string used as padding (default: space).\n * @returns The padded string centered with the given padding.\n *\n * @example\n * repeatPad(\"TS\", 6, \"-\"); // \"--TS--\"\n */\nexport function repeatPad(str: string, length: number, pad = ' '): string {\n  const total = Math.max(length - str.length, 0);\n  const left = Math.floor(total / 2);\n  const right = total - left;\n  return pad.repeat(left) + str + pad.repeat(right);\n}\n",
+      "type": "registry:lib"
+    }
+  ]
+}

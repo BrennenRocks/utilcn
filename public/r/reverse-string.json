@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "reverse-string",
+  "type": "registry:lib",
+  "title": "Reverse String",
+  "description": "Reverse a string.",
+  "files": [
+    {
+      "path": "registry/default/strings/reverse-string.ts",
+      "content": "/**\n * Reverses the characters in a string.\n *\n * @param str - The input string.\n * @returns The reversed string.\n *\n * @example\n * reverseString(\"TypeScript\"); // \"tpircSpeyT\"\n */\nexport function reverseString(str: string): string {\n  return str.split('').reverse().join('');\n}\n",
+      "type": "registry:lib"
+    }
+  ]
+}

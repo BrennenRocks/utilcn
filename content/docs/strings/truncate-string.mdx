@@ -1,0 +1,65 @@
+---
+title: truncate
+description: Truncates a string to a given length and appends an ellipsis if necessary
+---
+
+# truncate
+
+Truncates a string to a given length and appends an ellipsis ("...") if necessary.
+
+## Usage
+
+```typescript
+import { truncate } from '@/registry/default/strings/truncate-string';
+
+const result = truncate("Hello TypeScript World", 10);
+console.log(result); // "Hello Type..."
+```
+
+## Parameters
+
+| Parameter | Type     | Description                         |
+|-----------|----------|-------------------------------------|
+| `str`     | `string` | The input string                    |
+| `length`  | `number` | The maximum length of the string    |
+
+## Returns
+
+`string` - The truncated string with "..." if it exceeded the limit.
+
+## Examples
+
+```typescript
+truncate("Hello TypeScript World", 10); // "Hello Type..."
+truncate("Short", 10); // "Short"
+truncate("Exactly ten", 10); // "Exactly ten"
+truncate("This is a very long sentence", 15); // "This is a very ..."
+truncate("", 5); // ""
+```
+
+## Implementation
+
+```typescript
+export function truncate(str: string, length: number): string {
+  return str.length > length ? `${str.slice(0, length)}...` : str;
+}
+```
+
+## How It Works
+
+1. **Check Length**: Compares the string length to the target length
+2. **Truncate if Needed**: If the string is longer than the target, slices it to the specified length
+3. **Add Ellipsis**: Appends "..." to indicate truncation
+4. **Return Original**: If the string is within the limit, returns it unchanged
+
+## Use Cases
+
+- Displaying preview text in UI components
+- Creating summaries or excerpts
+- Fitting text within fixed-width containers
+- Email subject line previews
+- File name displays in limited space
+
+## Note
+
+The ellipsis ("...") is added to the truncated string, so the total length will be `length + 3` characters when truncation occurs.

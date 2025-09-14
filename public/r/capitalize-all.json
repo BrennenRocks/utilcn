@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "capitalize-all",
+  "type": "registry:lib",
+  "title": "Capitalize All",
+  "description": "Capitalize the first letter of every word in a string.",
+  "files": [
+    {
+      "path": "registry/default/strings/capitalize-all.ts",
+      "content": "/**\n * Capitalizes the first letter of every word in a string.\n *\n * @param str - The input string.\n * @returns The title-cased string.\n *\n * @example\n * capitalizeAll(\"hello world\"); // \"Hello World\"\n */\nexport function capitalizeAll(str: string): string {\n  return str.replace(\n    /(^|\\s)(\\S)/g,\n    (_, space, char) => space + char.toUpperCase(),\n  );\n}\n",
+      "type": "registry:lib"
+    }
+  ]
+}

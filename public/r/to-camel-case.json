@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "to-camel-case",
+  "type": "registry:lib",
+  "title": "To Camel Case",
+  "description": "Convert a string to camelCase.",
+  "files": [
+    {
+      "path": "registry/default/strings/to-camel-case.ts",
+      "content": "/**\n * Converts a string to camelCase.\n *\n * Handles acronyms properly, ensuring that something like\n * \"XMLHttpRequest\" becomes \"xmlHttpRequest\".\n *\n * @param str - The input string.\n * @returns The camelCased string.\n *\n * @example\n * toCamelCase(\"hello world-example\"); // \"helloWorldExample\"\n * toCamelCase(\"XMLHttpRequest\"); // \"xmlHttpRequest\"\n */\nexport function toCamelCase(str: string): string {\n  const result = str\n    // Split acronym groups into proper boundaries\n    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')\n    // Split between lowercase/digit and uppercase\n    .replace(/([a-z\\d])([A-Z])/g, '$1 $2')\n    // Normalize spaces/underscores/dashes\n    .replace(/[-_\\s]+/g, ' ')\n    // Lowercase everything to start clean\n    .toLowerCase()\n    // Capitalize first letter of each \"word\" after the first\n    .replace(/\\s+(\\w)/g, (_, c) => c.toUpperCase())\n    // Remove any remaining spaces and trim\n    .replace(/\\s+/g, '')\n    .trim();\n\n  // Ensure first character is lowercase for camelCase\n  return result.charAt(0).toLowerCase() + result.slice(1);\n}\n",
+      "type": "registry:lib"
+    }
+  ]
+}

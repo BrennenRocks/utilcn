@@ -1,0 +1,72 @@
+---
+title: toSnakeCase
+description: Converts a string to snake_case with proper acronym handling
+---
+
+# toSnakeCase
+
+Converts a string to snake_case. Handles acronyms and consecutive uppercase letters properly.
+
+## Usage
+
+```typescript
+import { toSnakeCase } from '@/registry/default/strings/to-snake-case';
+
+const result = toSnakeCase("Hello World");
+console.log(result); // "hello_world"
+```
+
+## Parameters
+
+| Parameter | Type     | Description      |
+|-----------|----------|------------------|
+| `str`     | `string` | The input string |
+
+## Returns
+
+`string` - The snake_cased string.
+
+## Examples
+
+```typescript
+toSnakeCase("Hello World"); // "hello_world"
+toSnakeCase("XMLHttpRequest"); // "xml_http_request"
+toSnakeCase("user-name"); // "user_name"
+toSnakeCase("APIResponse"); // "api_response"
+toSnakeCase("HTML Parser"); // "html_parser"
+```
+
+## Implementation
+
+```typescript
+export function toSnakeCase(str: string): string {
+  return (
+    str
+      // Split acronym groups (e.g. "XMLHttp" -> "XML_Http")
+      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+      // Split between a lowercase/digit and an uppercase (e.g. "testHTTP" -> "test_HTTP")
+      .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+      // Replace spaces and dashes with underscores
+      .replace(/[\s-]+/g, '_')
+      .toLowerCase()
+      // Remove leading and trailing underscores
+      .replace(/^_+|_+$/g, '')
+  );
+}
+```
+
+## Features
+
+- **Acronym Handling**: Properly splits consecutive uppercase letters (e.g., "XMLHttp" → "xml_http")
+- **Multiple Separators**: Handles spaces and hyphens, converting them to underscores
+- **Mixed Case**: Converts mixed case strings correctly
+- **Clean Output**: Removes leading and trailing underscores
+
+## Use Cases
+
+Snake_case is commonly used for:
+- Variable names in Python, Ruby, and other languages
+- Database column names
+- Configuration keys
+- Environment variables
+- File names in some conventions

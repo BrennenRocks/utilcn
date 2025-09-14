@@ -1,0 +1,68 @@
+---
+title: toCamelCase
+description: Converts a string to camelCase with proper acronym handling
+---
+
+# toCamelCase
+
+Converts a string to camelCase. Handles acronyms properly, ensuring that something like "XMLHttpRequest" becomes "xmlHttpRequest".
+
+## Usage
+
+```typescript
+import { toCamelCase } from '@/registry/default/strings/to-camel-case';
+
+const result = toCamelCase("hello world-example");
+console.log(result); // "helloWorldExample"
+```
+
+## Parameters
+
+| Parameter | Type     | Description      |
+|-----------|----------|------------------|
+| `str`     | `string` | The input string |
+
+## Returns
+
+`string` - The camelCased string.
+
+## Examples
+
+```typescript
+toCamelCase("hello world-example"); // "helloWorldExample"
+toCamelCase("XMLHttpRequest"); // "xmlHttpRequest"
+toCamelCase("user_name"); // "userName"
+toCamelCase("API-Response"); // "apiResponse"
+toCamelCase("HTML Parser"); // "htmlParser"
+```
+
+## Implementation
+
+```typescript
+export function toCamelCase(str: string): string {
+  const result = str
+    // Split acronym groups into proper boundaries
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    // Split between lowercase/digit and uppercase
+    .replace(/([a-z\d])([A-Z])/g, '$1 $2')
+    // Normalize spaces/underscores/dashes
+    .replace(/[-_\s]+/g, ' ')
+    // Lowercase everything to start clean
+    .toLowerCase()
+    // Capitalize first letter of each "word" after the first
+    .replace(/\s+(\w)/g, (_, c) => c.toUpperCase())
+    // Remove any remaining spaces and trim
+    .replace(/\s+/g, '')
+    .trim();
+
+  // Ensure first character is lowercase for camelCase
+  return result.charAt(0).toLowerCase() + result.slice(1);
+}
+```
+
+## Features
+
+- **Acronym Handling**: Properly handles consecutive uppercase letters (e.g., "XMLHttpRequest" → "xmlHttpRequest")
+- **Multiple Separators**: Handles spaces, hyphens, and underscores
+- **Mixed Case**: Converts mixed case strings correctly
+- **First Letter**: Ensures the first character is lowercase (camelCase convention)

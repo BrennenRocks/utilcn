@@ -1,0 +1,63 @@
+---
+title: reverseString
+description: Reverses the characters in a string
+---
+
+# reverseString
+
+Reverses the characters in a string.
+
+## Usage
+
+```typescript
+import { reverseString } from '@/registry/default/strings/reverse-string';
+
+const result = reverseString("TypeScript");
+console.log(result); // "tpircSpeyT"
+```
+
+## Parameters
+
+| Parameter | Type     | Description      |
+|-----------|----------|------------------|
+| `str`     | `string` | The input string |
+
+## Returns
+
+`string` - The reversed string.
+
+## Examples
+
+```typescript
+reverseString("TypeScript"); // "tpircSpeyT"
+reverseString("Hello World"); // "dlroW olleH"
+reverseString("12345"); // "54321"
+reverseString("a"); // "a"
+reverseString(""); // ""
+```
+
+## Implementation
+
+```typescript
+export function reverseString(str: string): string {
+  return str.split('').reverse().join('');
+}
+```
+
+## How It Works
+
+1. **Split**: Converts the string into an array of characters using `split('')`
+2. **Reverse**: Reverses the array using the built-in `reverse()` method
+3. **Join**: Combines the reversed array back into a string using `join('')`
+
+## Use Cases
+
+- Text manipulation and transformation
+- Palindrome checking (when combined with comparison)
+- Creating mirror effects in text
+- Data obfuscation (simple)
+- Algorithm challenges and puzzles
+
+## Performance Note
+
+This implementation is simple and readable. For very large strings, you might consider other approaches, but for typical use cases, this method is efficient and clear.

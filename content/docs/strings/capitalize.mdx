@@ -1,0 +1,51 @@
+---
+title: capitalize
+description: Capitalizes the first character of a string
+---
+
+# capitalize
+
+Capitalizes the first character of a string.
+
+## Usage
+
+```typescript
+import { capitalize } from '@/registry/default/strings/capitalize';
+
+const result = capitalize("typescript");
+console.log(result); // "Typescript"
+```
+
+## Parameters
+
+| Parameter | Type     | Description      |
+|-----------|----------|------------------|
+| `str`     | `string` | The input string |
+
+## Returns
+
+`string` - The string with the first character uppercased.
+
+## Examples
+
+```typescript
+capitalize("typescript"); // "Typescript"
+capitalize("hello world"); // "Hello world"
+capitalize(""); // ""
+capitalize("a"); // "A"
+```
+
+## Implementation
+
+```typescript
+export function capitalize(str: string): string {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+```
+
+## Edge Cases
+
+- Returns an empty string if the input is empty
+- Only capitalizes the first character, leaving the rest unchanged
+- Works with single character strings

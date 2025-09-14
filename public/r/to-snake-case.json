@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "to-snake-case",
+  "type": "registry:lib",
+  "title": "To Snake Case",
+  "description": "Convert a string to snake_case.",
+  "files": [
+    {
+      "path": "registry/default/strings/to-snake-case.ts",
+      "content": "/**\n * Converts a string to snake_case.\n *\n * Handles acronyms and consecutive uppercase letters properly.\n * Example:\n *   \"XMLHttpRequest\" -> \"xml_http_request\"\n *\n * @param str - The input string.\n * @returns The snake_cased string.\n *\n * @example\n * toSnakeCase(\"Hello World\"); // \"hello_world\"\n * toSnakeCase(\"XMLHttpRequest\"); // \"xml_http_request\"\n */\nexport function toSnakeCase(str: string): string {\n  return (\n    str\n      // Split acronym groups (e.g. \"XMLHttp\" -> \"XML_Http\")\n      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')\n      // Split between a lowercase/digit and an uppercase (e.g. \"testHTTP\" -> \"test_HTTP\")\n      .replace(/([a-z\\d])([A-Z])/g, '$1_$2')\n      // Replace spaces and dashes with underscores\n      .replace(/[\\s-]+/g, '_')\n      .toLowerCase()\n      // Remove leading and trailing underscores\n      .replace(/^_+|_+$/g, '')\n  );\n}\n",
+      "type": "registry:lib"
+    }
+  ]
+}

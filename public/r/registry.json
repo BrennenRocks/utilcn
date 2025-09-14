@@ -1,0 +1,115 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "utilcn",
+  "homepage": "https://utilcn.dev",
+  "items": [
+    {
+      "name": "capitalize-all",
+      "type": "registry:lib",
+      "title": "Capitalize All",
+      "description": "Capitalize the first letter of every word in a string.",
+      "files": [
+        {
+          "path": "registry/default/strings/capitalize-all.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "capitalize",
+      "type": "registry:lib",
+      "title": "Capitalize",
+      "description": "Capitalize the first letter of a string.",
+      "files": [
+        {
+          "path": "registry/default/strings/capitalize.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "repeat-pad",
+      "type": "registry:lib",
+      "title": "Repeat Pad",
+      "description": "Repeat a string until it reaches the desired length.",
+      "files": [
+        {
+          "path": "registry/default/strings/repeat-pad.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "reverse-string",
+      "type": "registry:lib",
+      "title": "Reverse String",
+      "description": "Reverse a string.",
+      "files": [
+        {
+          "path": "registry/default/strings/reverse-string.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "to-camel-case",
+      "type": "registry:lib",
+      "title": "To Camel Case",
+      "description": "Convert a string to camelCase.",
+      "files": [
+        {
+          "path": "registry/default/strings/to-camel-case.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "to-kebab-case",
+      "type": "registry:lib",
+      "title": "To Kebab Case",
+      "description": "Convert a string to kebabCase.",
+      "files": [
+        {
+          "path": "registry/default/strings/to-kebab-case.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "to-pascal-case",
+      "type": "registry:lib",
+      "title": "To Pascal Case",
+      "description": "Convert a string to PascalCase.",
+      "files": [
+        {
+          "path": "registry/default/strings/to-pascal-case.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "to-snake-case",
+      "type": "registry:lib",
+      "title": "To Snake Case",
+      "description": "Convert a string to snake_case.",
+      "files": [
+        {
+          "path": "registry/default/strings/to-snake-case.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "truncate-string",
+      "type": "registry:lib",
+      "title": "Truncate String",
+      "description": "Truncate a string to a given length.",
+      "files": [
+        {
+          "path": "registry/default/strings/truncate-string.ts",
+          "type": "registry:lib"
+        }
+      ]
+    }
+  ]
+}

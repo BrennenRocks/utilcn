@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "capitalize",
+  "type": "registry:lib",
+  "title": "Capitalize",
+  "description": "Capitalize the first letter of a string.",
+  "files": [
+    {
+      "path": "registry/default/strings/capitalize.ts",
+      "content": "/**\n * Capitalizes the first character of a string.\n *\n * @param str - The input string.\n * @returns The string with the first character uppercased.\n *\n * @example\n * capitalize(\"typescript\"); // \"Typescript\"\n */\nexport function capitalize(str: string): string {\n  if (!str) return '';\n  return str.charAt(0).toUpperCase() + str.slice(1);\n}\n",
+      "type": "registry:lib"
+    }
+  ]
+}
