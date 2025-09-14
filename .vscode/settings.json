@@ -1,0 +1,4 @@
+{
+  "editor.defaultFormatter": "biomejs.biome",
+  "markdown.validate.enabled": true
+}

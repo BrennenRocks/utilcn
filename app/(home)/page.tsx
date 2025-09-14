@@ -1,19 +1,29 @@
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <main className="flex flex-1 flex-col justify-center text-center">
-      <h1 className="mb-4 text-2xl font-bold">Hello World</h1>
-      <p className="text-fd-muted-foreground">
-        You can open{' '}
-        <Link
-          href="/docs"
-          className="text-fd-foreground font-semibold underline"
-        >
-          /docs
-        </Link>{' '}
-        and see the documentation.
-      </p>
+    <main className="flex flex-1 flex-col justify-center items-center text-center px-6 py-12">
+      <div className="max-w-2xl mx-auto space-y-8">
+        <div className="space-y-4">
+          <h1 className="text-4xl font-bold tracking-tight">
+            Utility Functions Registry
+          </h1>
+          <p className="text-xl text-fd-muted-foreground">
+            A collection of reusable utility functions for your JavaScript
+            projects
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button asChild>
+            <Link href="/docs">Get Started</Link>
+          </Button>
+          <Button variant="ghost" asChild>
+            <Link href="/docs">View Functions</Link>
+          </Button>
+        </div>
+      </div>
     </main>
   );
 }
