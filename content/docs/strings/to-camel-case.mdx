@@ -3,10 +3,6 @@ title: toCamelCase
 description: Converts a string to camelCase with proper acronym handling
 ---
 
-# toCamelCase
-
-Converts a string to camelCase. Handles acronyms properly, ensuring that something like "XMLHttpRequest" becomes "xmlHttpRequest".
-
 ## Usage
 
 ```typescript
@@ -59,10 +55,3 @@ export function toCamelCase(str: string): string {
   return result.charAt(0).toLowerCase() + result.slice(1);
 }
 ```
-
-## Features
-
-- **Acronym Handling**: Properly handles consecutive uppercase letters (e.g., "XMLHttpRequest" → "xmlHttpRequest")
-- **Multiple Separators**: Handles spaces, hyphens, and underscores
-- **Mixed Case**: Converts mixed case strings correctly
-- **First Letter**: Ensures the first character is lowercase (camelCase convention)

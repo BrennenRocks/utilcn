@@ -8,6 +8,6 @@
  * @example
  * truncate("Hello TypeScript World", 10); // "Hello Type..."
  */
-export function truncate(str: string, length: number): string {
+export function truncateString(str: string, length: number): string {
   return str.length > length ? `${str.slice(0, length)}...` : str;
 }

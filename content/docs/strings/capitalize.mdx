@@ -3,10 +3,6 @@ title: capitalize
 description: Capitalizes the first character of a string
 ---
 
-# capitalize
-
-Capitalizes the first character of a string.
-
 ## Usage
 
 ```typescript
@@ -43,9 +39,3 @@ export function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 ```
-
-## Edge Cases
-
-- Returns an empty string if the input is empty
-- Only capitalizes the first character, leaving the rest unchanged
-- Works with single character strings

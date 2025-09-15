@@ -3,10 +3,6 @@ title: toPascalCase
 description: Converts a string to PascalCase with proper acronym handling
 ---
 
-# toPascalCase
-
-Converts a string to PascalCase. Handles acronyms properly, ensuring that something like "XMLHttpRequest" becomes "XmlHttpRequest".
-
 ## Usage
 
 ```typescript
@@ -57,16 +53,3 @@ export function toPascalCase(str: string): string {
   );
 }
 ```
-
-## Features
-
-- **Acronym Handling**: Properly handles consecutive uppercase letters (e.g., "XMLHttpRequest" → "XmlHttpRequest")
-- **Multiple Separators**: Handles spaces, hyphens, and underscores
-- **Mixed Case**: Converts mixed case strings correctly
-- **First Letter**: Ensures the first character is uppercase (PascalCase convention)
-
-## Difference from camelCase
-
-PascalCase is similar to camelCase, but the first letter is capitalized:
-- camelCase: `helloWorld`
-- PascalCase: `HelloWorld`

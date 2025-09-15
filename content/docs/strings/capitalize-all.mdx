@@ -3,10 +3,6 @@ title: capitalizeAll
 description: Capitalizes the first letter of every word in a string
 ---
 
-# capitalizeAll
-
-Capitalizes the first letter of every word in a string (title case).
-
 ## Usage
 
 ```typescript
@@ -45,10 +41,3 @@ export function capitalizeAll(str: string): string {
   );
 }
 ```
-
-## How It Works
-
-The function uses a regular expression `/(^|\s)(\S)/g` to:
-- Match the beginning of the string (`^`) or any whitespace character (`\s`)
-- Followed by any non-whitespace character (`\S`)
-- Capitalizes each matched non-whitespace character while preserving the original spacing

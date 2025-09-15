@@ -1,18 +1,14 @@
 ---
-title: truncate
+title: truncateString
 description: Truncates a string to a given length and appends an ellipsis if necessary
 ---
-
-# truncate
-
-Truncates a string to a given length and appends an ellipsis ("...") if necessary.
 
 ## Usage
 
 ```typescript
-import { truncate } from '@/registry/default/strings/truncate-string';
+import { truncateString } from '@/registry/default/strings/truncate-string';
 
-const result = truncate("Hello TypeScript World", 10);
+const result = truncateString("Hello TypeScript World", 10);
 console.log(result); // "Hello Type..."
 ```
 
@@ -30,35 +26,20 @@ console.log(result); // "Hello Type..."
 ## Examples
 
 ```typescript
-truncate("Hello TypeScript World", 10); // "Hello Type..."
-truncate("Short", 10); // "Short"
-truncate("Exactly ten", 10); // "Exactly ten"
-truncate("This is a very long sentence", 15); // "This is a very ..."
-truncate("", 5); // ""
+truncateString("Hello TypeScript World", 10); // "Hello Type..."
+truncateString("Short", 10); // "Short"
+truncateString("Exactly ten", 10); // "Exactly ten"
+truncateString("This is a very long sentence", 15); // "This is a very ..."
+truncateString("", 5); // ""
 ```
 
 ## Implementation
 
 ```typescript
-export function truncate(str: string, length: number): string {
+export function truncateString(str: string, length: number): string {
   return str.length > length ? `${str.slice(0, length)}...` : str;
 }
 ```
-
-## How It Works
-
-1. **Check Length**: Compares the string length to the target length
-2. **Truncate if Needed**: If the string is longer than the target, slices it to the specified length
-3. **Add Ellipsis**: Appends "..." to indicate truncation
-4. **Return Original**: If the string is within the limit, returns it unchanged
-
-## Use Cases
-
-- Displaying preview text in UI components
-- Creating summaries or excerpts
-- Fitting text within fixed-width containers
-- Email subject line previews
-- File name displays in limited space
 
 ## Note
 

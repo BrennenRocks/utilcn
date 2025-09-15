@@ -3,10 +3,6 @@ title: reverseString
 description: Reverses the characters in a string
 ---
 
-# reverseString
-
-Reverses the characters in a string.
-
 ## Usage
 
 ```typescript
@@ -43,20 +39,6 @@ export function reverseString(str: string): string {
   return str.split('').reverse().join('');
 }
 ```
-
-## How It Works
-
-1. **Split**: Converts the string into an array of characters using `split('')`
-2. **Reverse**: Reverses the array using the built-in `reverse()` method
-3. **Join**: Combines the reversed array back into a string using `join('')`
-
-## Use Cases
-
-- Text manipulation and transformation
-- Palindrome checking (when combined with comparison)
-- Creating mirror effects in text
-- Data obfuscation (simple)
-- Algorithm challenges and puzzles
 
 ## Performance Note
 

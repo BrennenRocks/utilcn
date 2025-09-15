@@ -3,10 +3,6 @@ title: toSnakeCase
 description: Converts a string to snake_case with proper acronym handling
 ---
 
-# toSnakeCase
-
-Converts a string to snake_case. Handles acronyms and consecutive uppercase letters properly.
-
 ## Usage
 
 ```typescript
@@ -54,19 +50,3 @@ export function toSnakeCase(str: string): string {
   );
 }
 ```
-
-## Features
-
-- **Acronym Handling**: Properly splits consecutive uppercase letters (e.g., "XMLHttp" → "xml_http")
-- **Multiple Separators**: Handles spaces and hyphens, converting them to underscores
-- **Mixed Case**: Converts mixed case strings correctly
-- **Clean Output**: Removes leading and trailing underscores
-
-## Use Cases
-
-Snake_case is commonly used for:
-- Variable names in Python, Ruby, and other languages
-- Database column names
-- Configuration keys
-- Environment variables
-- File names in some conventions

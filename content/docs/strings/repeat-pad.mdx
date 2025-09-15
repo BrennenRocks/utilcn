@@ -3,10 +3,6 @@ title: repeatPad
 description: Pads a string evenly on both sides until it reaches the desired length
 ---
 
-# repeatPad
-
-Pads a string evenly on both sides until it reaches the desired length, creating a centered effect.
-
 ## Usage
 
 ```typescript
@@ -48,17 +44,3 @@ export function repeatPad(str: string, length: number, pad = ' '): string {
   return pad.repeat(left) + str + pad.repeat(right);
 }
 ```
-
-## How It Works
-
-1. **Calculate Total Padding**: Determines how much padding is needed
-2. **Split Padding**: Divides the padding between left and right sides
-3. **Handle Odd Padding**: When padding is odd, the extra character goes to the right side
-4. **Apply Padding**: Uses `String.repeat()` to add padding on both sides
-
-## Edge Cases
-
-- If the desired length is less than or equal to the string length, returns the original string
-- When total padding is odd, the extra padding character is added to the right side
-- Works with multi-character padding strings
-- Returns the original string if the target length is smaller than the input string
