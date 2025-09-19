@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "upload-file",
+  "type": "registry:component",
+  "title": "Upload A File To Storage",
+  "description": "Upload a file to a storage provider using a presigned upload URL.",
+  "dependencies": [
+    "@tanstack/react-query"
+  ],
+  "files": [
+    {
+      "path": "registry/default/files/upload-file.tsx",
+      "content": "'use client';\n\nimport { type ChangeEvent, useState } from 'react';\nimport { useUploadFile } from '@/hooks/use-upload-file';\n\nexport function UploadFile() {\n  const [progress, setProgress] = useState(0);\n  const uploadFile = useUploadFile();\n\n  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {\n    const file = e.target.files?.[0];\n    if (!file) return;\n\n    uploadFile.mutate(\n      { file, onProgress: (p) => setProgress(p) },\n      {\n        onSuccess: (url) => {\n          console.log('Uploaded to:', url);\n        },\n        onError: (err) => {\n          console.error(`Upload failed: ${(err as Error).message}`);\n        },\n        onSettled: () => setProgress(0),\n      },\n    );\n  };\n\n  return (\n    <div className=\"flex flex-col gap-4\">\n      <input\n        type=\"file\"\n        onChange={handleFileChange}\n        className=\"file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-secondary-foreground hover:file:bg-secondary/80\"\n      />\n\n      {uploadFile.isPending && (\n        <div className=\"mt-4 flex items-center gap-2\">\n          <div className=\"w-full h-2 bg-secondary rounded-full\">\n            <div\n              className=\"h-2 bg-primary rounded-full transition-all duration-300\"\n              style={{ width: `${progress}%` }}\n            />\n          </div>\n          <span className=\"text-sm text-muted-foreground\">{progress}%</span>\n        </div>\n      )}\n    </div>\n  );\n}\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/default/files/use-upload-file.ts",
+      "content": "import { useMutation } from '@tanstack/react-query';\n\ntype UploadArgs = {\n  file: File;\n  onProgress?: (percent: number) => void;\n};\n\nexport function useUploadFile() {\n  return useMutation({\n    mutationFn: async ({ file, onProgress }: UploadArgs) => {\n      const presignRes = await fetch('/api/uploads/presign', {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify({\n          fileName: file.name,\n          contentLength: file.size,\n        }),\n      });\n\n      if (!presignRes.ok) throw new Error('Failed to get presigned URL');\n      const presign = await presignRes.json();\n\n      await new Promise<void>((resolve, reject) => {\n        const xhr = new XMLHttpRequest();\n        xhr.open('PUT', presign.uploadUrl);\n\n        xhr.setRequestHeader('Content-Type', file.type);\n\n        xhr.upload.onprogress = (evt) => {\n          if (evt.lengthComputable && onProgress) {\n            const percent = Math.round((evt.loaded * 100) / evt.total);\n            onProgress(percent);\n          }\n        };\n\n        xhr.onload = () => {\n          if (xhr.status >= 200 && xhr.status < 300) resolve();\n          else reject(new Error('Upload failed'));\n        };\n\n        xhr.onerror = () => reject(new Error('Upload failed'));\n        xhr.send(file);\n      });\n\n      return presign.fileUrl as string;\n    },\n  });\n}\n",
+      "type": "registry:hook"
+    }
+  ],
+  "docs": "This component pairs nicely with the `generate-presigned-upload-url` item from this registry to generate a presigned upload URL for a file."
+}

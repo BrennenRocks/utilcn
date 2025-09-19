@@ -1,0 +1,142 @@
+---
+title: generatePresignedUploadUrl
+description: Generate a presigned URL for secure file uploads to S3-compatible storage
+---
+
+## Usage
+
+```typescript
+import { generatePresignedUploadUrl } from '@/registry/default/files/generate-presigned-upload-url';
+
+const { uploadUrl, key, fileUrl } = await generatePresignedUploadUrl({
+  fileName: 'document.pdf',
+  contentLength: 1024000,
+  expiresIn: 3600
+});
+```
+
+## Installation
+
+<InstallTabs component="generate-presigned-upload-url" />
+
+## Parameters
+
+| Parameter       | Type     | Description                                    | Default |
+|----------------|----------|------------------------------------------------|---------|
+| `fileName`     | `string` | The original filename with extension          | -       |
+| `contentLength`| `number` | The size of the file in bytes                 | -       |
+| `expiresIn`    | `number` | URL expiration time in seconds                | `3600`  |
+
+## Returns
+
+An object containing:
+- `uploadUrl` - The presigned URL for uploading the file
+- `key` - The unique key/path where the file will be stored
+- `fileUrl` - The public URL where the file will be accessible after upload
+
+## Environment Variables
+
+This function requires the following environment variables:
+
+```bash
+S3_REGION=your-region
+S3_ENDPOINT=your-s3-endpoint
+S3_ACCESS_KEY=your-access-key
+S3_SECRET_KEY=your-secret-key
+S3_BUCKET_NAME=your-bucket-name
+S3_PUBLIC_URL=your-public-url
+```
+
+## Examples
+
+### Basic file upload preparation
+
+```typescript
+const result = await generatePresignedUploadUrl({
+  fileName: 'profile-picture.jpg',
+  contentLength: 2048000, // 2MB
+});
+
+console.log(result.uploadUrl); // Use this URL to upload the file
+console.log(result.fileUrl);   // The final public URL of the uploaded file
+```
+
+### Custom expiration time
+
+```typescript
+const result = await generatePresignedUploadUrl({
+  fileName: 'temporary-file.pdf',
+  contentLength: 512000,
+  expiresIn: 300, // 5 minutes
+});
+```
+
+### Error handling
+
+```typescript
+try {
+  const result = await generatePresignedUploadUrl({
+    fileName: 'large-file.zip',
+    contentLength: 15 * 1024 * 1024, // 15MB - exceeds limit
+  });
+} catch (error) {
+  console.error(error.message); // "File size exceeds maximum allowed limit"
+}
+```
+
+## Supported File Types
+
+The function automatically detects content types for common file extensions:
+
+- **Images**: jpg, jpeg, png, gif, webp, svg
+- **Documents**: pdf, doc, docx
+- **Other**: json, txt
+- **Default**: application/octet-stream for unknown types
+
+## File Size Limits
+
+- Maximum file size: 10MB (10,485,760 bytes)
+- Files exceeding this limit will throw an error
+
+## Security Features
+
+- Generates unique file keys using timestamps to prevent collisions
+- Enforces file size limits to prevent abuse
+- Uses presigned URLs with configurable expiration times
+- Supports S3-compatible storage services with proper authentication
+
+## Implementation
+
+```typescript
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+
+export async function generatePresignedUploadUrl({
+  fileName,
+  expiresIn = 3600,
+  contentLength,
+}: PresignedUrlInput) {
+  if (contentLength > MAX_FILE_SIZE_BYTES) {
+    throw new Error('File size exceeds maximum allowed limit');
+  }
+
+  const fileExt = fileName.split('.').pop()?.toLowerCase() ?? '';
+  const uniqueId = Date.now().toString();
+  const key = fileExt ? `${uniqueId}.${fileExt}` : uniqueId;
+  const contentType = getContentType(fileExt);
+
+  const command = new PutObjectCommand({
+    Bucket: process.env.S3_BUCKET_NAME,
+    Key: key,
+    ContentType: contentType,
+    ContentLength: contentLength,
+  });
+
+  const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn });
+  const fileUrl = `${process.env.S3_PUBLIC_URL}/${key}`;
+
+  return { uploadUrl, key, fileUrl };
+}
+```

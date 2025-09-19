@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "generate-presigned-upload-url",
+  "type": "registry:lib",
+  "title": "Generate Presigned Upload URL",
+  "description": "Generate a presigned upload URL for a file.",
+  "dependencies": [
+    "@aws-sdk/client-s3",
+    "@aws-sdk/s3-request-presigner"
+  ],
+  "files": [
+    {
+      "path": "registry/default/files/generate-presigned-upload-url.ts",
+      "content": "import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';\nimport { getSignedUrl } from '@aws-sdk/s3-request-presigner';\n\nconst MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB\nconst s3Client = new S3Client({\n  region: process.env.S3_REGION,\n  endpoint: process.env.S3_ENDPOINT,\n  forcePathStyle: true, // Required for some S3-compatible services\n  credentials: {\n    accessKeyId: process.env.S3_ACCESS_KEY,\n    secretAccessKey: process.env.S3_SECRET_KEY,\n  },\n});\n\ntype PresignedUrlInput = {\n  fileName: string;\n  expiresIn?: number;\n  contentLength: number;\n};\n\nexport async function generatePresignedUploadUrl({\n  fileName,\n  expiresIn = 3600,\n  contentLength,\n}: PresignedUrlInput) {\n  if (contentLength > MAX_FILE_SIZE_BYTES) {\n    throw new Error('File size exceeds maximum allowed limit');\n  }\n\n  try {\n    const fileExt = fileName.split('.').pop()?.toLowerCase() ?? '';\n    const uniqueId = Date.now().toString();\n    const key = fileExt ? `${uniqueId}.${fileExt}` : uniqueId;\n    const contentType = getContentType(fileExt);\n\n    const command = new PutObjectCommand({\n      Bucket: process.env.S3_BUCKET_NAME,\n      Key: key,\n      ContentType: contentType,\n      ContentLength: contentLength,\n    });\n\n    const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn });\n    const fileUrl = `${process.env.S3_PUBLIC_URL}/${key}`;\n\n    return { uploadUrl, key, fileUrl };\n  } catch (err) {\n    console.error({ err }, 'Failed to generate presigned upload URL');\n    throw new Error('Failed to generate upload URL');\n  }\n}\n\nfunction getContentType(extension: string): string {\n  switch (extension) {\n    // Images\n    case 'jpg':\n    case 'jpeg':\n      return 'image/jpeg';\n    case 'png':\n      return 'image/png';\n    case 'gif':\n      return 'image/gif';\n    case 'webp':\n      return 'image/webp';\n    case 'svg':\n      return 'image/svg+xml';\n\n    // Documents\n    case 'pdf':\n      return 'application/pdf';\n    case 'doc':\n      return 'application/msword';\n    case 'docx':\n      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';\n\n    // Other common types\n    case 'json':\n      return 'application/json';\n    case 'txt':\n      return 'text/plain';\n\n    default:\n      return 'application/octet-stream';\n  }\n}\n",
+      "type": "registry:lib"
+    }
+  ],
+  "envVars": {
+    "S3_ACCESS_KEY": "<access key for S3 bucket>",
+    "S3_SECRET_KEY": "<secret key for S3 bucket authentication>",
+    "S3_REGION": "<AWS region for S3 bucket>",
+    "S3_ENDPOINT": "<S3 bucket endpoint URL>",
+    "S3_BUCKET_NAME": "<name of the S3 bucket>",
+    "S3_PUBLIC_URL": "<public URL for accessing uploaded files>"
+  },
+  "docs": "Remember to configure CORS settings in your S3 bucket or compatible storage provider to allow uploads from your application's domain. This is required for the presigned URL uploads to work correctly."
+}
