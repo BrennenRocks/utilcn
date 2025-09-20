@@ -155,6 +155,23 @@
           "type": "registry:hook"
         }
       ]
+    },
+    {
+      "name": "env-server",
+      "type": "registry:file",
+      "title": "Environment Server Configuration",
+      "description": "Environment variable validation schema using Zod for server configuration",
+      "docs": "You will need to update `env-server.ts` to match your environment variables.",
+      "dependencies": [
+        "zod"
+      ],
+      "files": [
+        {
+          "path": "registry/default/secrets/env-server.ts",
+          "type": "registry:file",
+          "target": "~/env-server.ts"
+        }
+      ]
     }
   ]
 }

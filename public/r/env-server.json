@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "env-server",
+  "type": "registry:file",
+  "title": "Environment Server Configuration",
+  "description": "Environment variable validation schema using Zod for server configuration",
+  "dependencies": [
+    "zod"
+  ],
+  "files": [
+    {
+      "path": "registry/default/secrets/env-server.ts",
+      "content": "import { z } from 'zod';\n\nconst serverSchema = z.object({\n  DATABASE_URL: z.string(),\n  PORT: z.coerce.number(),\n});\n\nconst parsedEnv = serverSchema.safeParse(process.env);\nif (!parsedEnv.success) {\n  const errors = parsedEnv.error.issues;\n  for (const error of errors) {\n    console.error(JSON.stringify(error, null, 2));\n  }\n\n  process.exit(1);\n}\n\nexport const serverEnv = parsedEnv.data;\n",
+      "type": "registry:file",
+      "target": "~/env-server.ts"
+    }
+  ],
+  "docs": "You will need to update `env-server.ts` to match your environment variables."
+}
