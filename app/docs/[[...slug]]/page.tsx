@@ -1,4 +1,4 @@
-import { source } from '@/lib/source';
+import { createRelativeLink } from 'fumadocs-ui/mdx';
 import {
   DocsBody,
   DocsDescription,
@@ -7,7 +7,7 @@ import {
 } from 'fumadocs-ui/page';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { createRelativeLink } from 'fumadocs-ui/mdx';
+import { source } from '@/lib/source';
 import { getMDXComponents } from '@/mdx-components';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
@@ -47,5 +47,27 @@ export async function generateMetadata(
   return {
     title: page.data.title,
     description: page.data.description,
+    openGraph: {
+      title: page.data.title,
+      description: page.data.description,
+      url: `https://utilcn.dev/docs/${params.slug?.join('/') || ''}`,
+      siteName: 'utilcn',
+      images: [
+        {
+          url: 'https://images.utilcn.dev/og-image.png',
+          width: 1330,
+          height: 400,
+          alt: page.data.title,
+        },
+      ],
+      locale: 'en_US',
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: page.data.title,
+      description: page.data.description,
+      images: ['https://images.utilcn.dev/og-image.png'],
+    },
   };
 }
