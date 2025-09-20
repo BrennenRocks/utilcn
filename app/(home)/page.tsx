@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function HomePage() {
   return (
@@ -10,14 +10,14 @@ export default function HomePage() {
             Utility Functions Registry
           </h1>
           <p className="text-xl text-fd-muted-foreground">
-            A collection of reusable utility functions for your JavaScript
+            A collection of reusable utility functions for your TypeScript
             projects
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild>
-            <Link href="/docs">Get Started</Link>
+            <Link href="/docs/backend">Get Started</Link>
           </Button>
           <Button variant="ghost" asChild>
             <Link href="/docs">View Functions</Link>

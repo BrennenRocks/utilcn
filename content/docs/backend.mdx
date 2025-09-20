@@ -1,0 +1,28 @@
+---
+title: Backend Setup
+---
+
+## Components Configuration
+
+Create a `components.json` file in the root of your backend folder with the following contents:
+
+```json
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "lib": "@/lib"
+  }
+}
+```
+
+This is the mimimum configuration file that is required for the shadcn/ui cli to work properly with your backend setup.

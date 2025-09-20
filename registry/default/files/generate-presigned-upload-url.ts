@@ -1,6 +1,15 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
+if (
+  !process.env.S3_REGION ||
+  !process.env.S3_ENDPOINT ||
+  !process.env.S3_ACCESS_KEY ||
+  !process.env.S3_SECRET_KEY
+) {
+  throw new Error('Missing S3 environment variables');
+}
+
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 const s3Client = new S3Client({
   region: process.env.S3_REGION,

@@ -1,7 +1,7 @@
 'use client';
 
 import { type ChangeEvent, useState } from 'react';
-import { useUploadFile } from '@/hooks/use-upload-file';
+import { useUploadFile } from '@/registry/default/files/use-upload-file';
 
 export function UploadFile() {
   const [progress, setProgress] = useState(0);
@@ -12,12 +12,12 @@ export function UploadFile() {
     if (!file) return;
 
     uploadFile.mutate(
-      { file, onProgress: (p) => setProgress(p) },
+      { file, onProgress: (p: number) => setProgress(p) },
       {
-        onSuccess: (url) => {
+        onSuccess: (url: string) => {
           console.log('Uploaded to:', url);
         },
-        onError: (err) => {
+        onError: (err: Error) => {
           console.error(`Upload failed: ${(err as Error).message}`);
         },
         onSettled: () => setProgress(0),
