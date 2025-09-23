@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "download-file",
+  "type": "registry:component",
+  "title": "Download A File From Storage",
+  "description": "Download a file from a storage provider using a presigned download URL.",
+  "dependencies": [
+    "@tanstack/react-query",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "registry/default/storage/download-file.tsx",
+      "content": "'use client';\n\nimport { Download } from 'lucide-react';\nimport type { PropsWithChildren } from 'react';\nimport { cn } from '@/lib/utils';\nimport { useDownloadFile } from '@/registry/default/storage/use-download-file';\n\ntype DownloadFileProps = PropsWithChildren<{\n  fileKey: string;\n  fileName?: string;\n  className?: string;\n}>;\n\nexport function DownloadFile({\n  fileKey,\n  fileName,\n  children,\n  className,\n}: DownloadFileProps) {\n  const downloadFile = useDownloadFile();\n\n  const handleDownload = () => {\n    downloadFile.mutate(\n      { fileKey, fileName },\n      {\n        onSuccess: (url: string) => {\n          console.log('Download initiated:', url);\n        },\n        onError: (err: Error) => {\n          console.error(`Download failed: ${(err as Error).message}`);\n        },\n      },\n    );\n  };\n\n  return (\n    <button\n      className={cn('flex items-center gap-2', className)}\n      disabled={downloadFile.isPending}\n      onClick={handleDownload}\n      type=\"button\"\n    >\n      {children || (\n        <>\n          <Download className=\"mr-2 h-4 w-4\" />\n          {downloadFile.isPending ? 'Downloading...' : 'Download'}\n        </>\n      )}\n    </button>\n  );\n}\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/default/storage/use-download-file.ts",
+      "content": "import { useMutation } from '@tanstack/react-query';\n\ntype DownloadArgs = {\n  fileKey: string;\n  fileName?: string;\n};\n\nexport function useDownloadFile() {\n  return useMutation({\n    mutationFn: async ({ fileKey, fileName }: DownloadArgs) => {\n      const downloadRes = await fetch('/api/downloads/presign', {\n        method: 'POST',\n        headers: { 'Content-Type': 'application/json' },\n        body: JSON.stringify({ key: fileKey }),\n      });\n\n      if (!downloadRes.ok) throw new Error('Failed to get download URL');\n      const { downloadUrl } = await downloadRes.json();\n\n      const response = await fetch(downloadUrl);\n      const blob = await response.blob();\n      const url = window.URL.createObjectURL(blob);\n      const link = document.createElement('a');\n      link.href = url;\n      link.download = fileName || fileKey.split('/').pop() || 'download';\n      document.body.appendChild(link);\n      link.click();\n      link.remove();\n      window.URL.revokeObjectURL(url);\n\n      return downloadUrl;\n    },\n  });\n}\n",
+      "type": "registry:hook"
+    }
+  ],
+  "docs": "This component pairs nicely with the `generate-presigned-download-url` item from this registry to generate a presigned download URL for a file."
+}

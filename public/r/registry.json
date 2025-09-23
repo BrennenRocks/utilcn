@@ -112,11 +112,32 @@
       ]
     },
     {
+      "name": "generate-presigned-download-url",
+      "type": "registry:lib",
+      "title": "Generate Presigned Download URL",
+      "description": "Generate a presigned download URL for a file.",
+      "docs": "Remember to configure CORS settings in your S3 bucket or compatible storage provider to allow downloads from your application's domain. This is required for the presigned URL downloads to work correctly. This function pairs nicely with the `download-file` item from this registry to generate a presigned download URL for a file.",
+      "dependencies": [
+        "@aws-sdk/client-s3",
+        "@aws-sdk/s3-request-presigner"
+      ],
+      "files": [
+        {
+          "path": "registry/default/storage/generate-presigned-download-url.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/default/storage/s3-client.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "generate-presigned-upload-url",
       "type": "registry:lib",
       "title": "Generate Presigned Upload URL",
       "description": "Generate a presigned upload URL for a file.",
-      "docs": "Remember to configure CORS settings in your S3 bucket or compatible storage provider to allow uploads from your application's domain. This is required for the presigned URL uploads to work correctly.",
+      "docs": "Remember to configure CORS settings in your S3 bucket or compatible storage provider to allow uploads from your application's domain. This is required for the presigned URL uploads to work correctly. This function pairs nicely with the `upload-file` component from this registry to upload a file.",
       "envVars": {
         "S3_ACCESS_KEY": "<access key for S3 bucket>",
         "S3_SECRET_KEY": "<secret key for S3 bucket authentication>",
@@ -131,8 +152,33 @@
       ],
       "files": [
         {
-          "path": "registry/default/files/generate-presigned-upload-url.ts",
+          "path": "registry/default/storage/generate-presigned-upload-url.ts",
           "type": "registry:lib"
+        },
+        {
+          "path": "registry/default/storage/s3-client.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "download-file",
+      "type": "registry:component",
+      "title": "Download A File From Storage",
+      "description": "Download a file from a storage provider using a presigned download URL.",
+      "docs": "This component pairs nicely with the `generate-presigned-download-url` item from this registry to generate a presigned download URL for a file.",
+      "dependencies": [
+        "@tanstack/react-query",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "registry/default/storage/download-file.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/default/storage/use-download-file.ts",
+          "type": "registry:hook"
         }
       ]
     },
@@ -147,11 +193,11 @@
       ],
       "files": [
         {
-          "path": "registry/default/files/upload-file.tsx",
+          "path": "registry/default/storage/upload-file.tsx",
           "type": "registry:component"
         },
         {
-          "path": "registry/default/files/use-upload-file.ts",
+          "path": "registry/default/storage/use-upload-file.ts",
           "type": "registry:hook"
         }
       ]

@@ -1,7 +1,7 @@
 'use client';
 
 import { type ChangeEvent, useState } from 'react';
-import { useUploadFile } from '@/registry/default/files/use-upload-file';
+import { useUploadFile } from '@/registry/default/storage/use-upload-file';
 
 export function UploadFile() {
   const [progress, setProgress] = useState(0);

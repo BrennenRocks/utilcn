@@ -1,25 +1,9 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-if (
-  !process.env.S3_REGION ||
-  !process.env.S3_ENDPOINT ||
-  !process.env.S3_ACCESS_KEY ||
-  !process.env.S3_SECRET_KEY
-) {
-  throw new Error('Missing S3 environment variables');
-}
+import { getS3Client } from '@/registry/default/storage/s3-client';
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
-const s3Client = new S3Client({
-  region: process.env.S3_REGION,
-  endpoint: process.env.S3_ENDPOINT,
-  forcePathStyle: true, // Required for some S3-compatible services
-  credentials: {
-    accessKeyId: process.env.S3_ACCESS_KEY,
-    secretAccessKey: process.env.S3_SECRET_KEY,
-  },
-});
 
 type PresignedUrlInput = {
   fileName: string;
@@ -49,7 +33,7 @@ export async function generatePresignedUploadUrl({
       ContentLength: contentLength,
     });
 
-    const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn });
+    const uploadUrl = await getSignedUrl(getS3Client(), command, { expiresIn });
     const fileUrl = `${process.env.S3_PUBLIC_URL}/${key}`;
 
     return { uploadUrl, key, fileUrl };

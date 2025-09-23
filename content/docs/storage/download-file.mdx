@@ -1,0 +1,163 @@
+---
+title: downloadFile
+description: A React component and hook for file downloads with progress tracking
+---
+
+<Callout title="Frontend Implementation" type="info">
+  This component is designed for **frontend use** and handles file downloads through presigned URLs. It pairs with the `generate-presigned-download-url` function which should be implemented on your backend server to generate secure download URLs.
+</Callout>
+
+## Usage
+
+### Component
+
+```tsx
+import { DownloadFile } from '@/components/download-file';
+
+export function MyPage() {
+  return (
+    <div>
+      <h2>Download your files</h2>
+      <DownloadFile fileKey="documents/my-file.pdf" fileName="my-file.pdf" />
+    </div>
+  );
+}
+```
+
+## Installation
+
+<InstallTabs component="download-file" />
+
+## Component API
+
+### Parameters
+
+The `DownloadFile` component accepts the following props:
+
+| Parameter   | Type        | Description                                    |
+|-------------|-------------|------------------------------------------------|
+| `fileKey`   | `string`    | The storage key/path of the file to download   |
+| `fileName`  | `string`    | Optional custom filename for the download      |
+| `className` | `string`    | Optional CSS classes for styling              |
+| `children`  | `ReactNode` | Optional custom content for the button       |
+
+## Hook API
+
+### Parameters
+
+The `useDownloadFile` hook returns a mutation object that accepts:
+
+| Parameter  | Type     | Description                                  |
+|------------|----------|----------------------------------------------|
+| `fileKey`  | `string` | The storage key/path of the file to download |
+| `fileName` | `string` | Optional custom filename for the download    |
+
+## API Integration
+
+<Card title="generatePresignedDownloadUrl" href="/docs/storage/generate-presigned-download-url">
+  Generate presigned URLs for secure file downloads from cloud storage
+</Card>
+
+## Dependencies
+
+- `@tanstack/react-query` - For mutation management
+- `lucide-react` - For the download icon
+
+## Implementation
+
+### DownloadFile Component
+
+```tsx
+'use client';
+
+import { Download } from 'lucide-react';
+import type { PropsWithChildren } from 'react';
+import { cn } from '@/lib/utils';
+import { useDownloadFile } from '@/hooks/use-download-file';
+
+type DownloadFileProps = PropsWithChildren<{
+  fileKey: string;
+  fileName?: string;
+  className?: string;
+}>;
+
+export function DownloadFile({
+  fileKey,
+  fileName,
+  children,
+  className,
+}: DownloadFileProps) {
+  const downloadFile = useDownloadFile();
+
+  const handleDownload = () => {
+    downloadFile.mutate(
+      { fileKey, fileName },
+      {
+        onSuccess: (url: string) => {
+          console.log('Download initiated:', url);
+        },
+        onError: (err: Error) => {
+          console.error(`Download failed: ${(err as Error).message}`);
+        },
+      },
+    );
+  };
+
+  return (
+    <button
+      className={cn('flex items-center gap-2', className)}
+      disabled={downloadFile.isPending}
+      onClick={handleDownload}
+      type="button"
+    >
+      {children || (
+        <>
+          <Download className="mr-2 h-4 w-4" />
+          {downloadFile.isPending ? 'Downloading...' : 'Download'}
+        </>
+      )}
+    </button>
+  );
+}
+
+```
+
+### useDownloadFile Hook
+
+```tsx
+import { useMutation } from '@tanstack/react-query';
+
+type DownloadArgs = {
+  fileKey: string;
+  fileName?: string;
+};
+
+export function useDownloadFile() {
+  return useMutation({
+    mutationFn: async ({ fileKey, fileName }: DownloadArgs) => {
+      const downloadRes = await fetch('/api/downloads/presign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: fileKey }),
+      });
+
+      if (!downloadRes.ok) throw new Error('Failed to get download URL');
+      const { downloadUrl } = await downloadRes.json();
+
+      const response = await fetch(downloadUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName || fileKey.split('/').pop() || 'download';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      return downloadUrl;
+    },
+  });
+}
+
+```

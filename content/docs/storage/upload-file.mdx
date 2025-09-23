@@ -3,6 +3,10 @@ title: uploadFile
 description: A React component and hook for file uploads with progress tracking
 ---
 
+<Callout title="Frontend Implementation" type="info">
+  This component is designed for **frontend use** and handles file uploads through presigned URLs. It pairs with the `generate-presigned-upload-url` function which should be implemented on your backend server to generate secure upload URLs.
+</Callout>
+
 ## Usage
 
 ### Component
@@ -67,7 +71,7 @@ The `useUploadFile` hook returns a mutation object that accepts:
 
 ## API Integration
 
-<Card title="generatePresignedUploadUrl" href="/docs/files/backend/generate-presigned-upload-url">
+<Card title="generatePresignedUploadUrl" href="/docs/storage/generate-presigned-upload-url">
   Generate presigned URLs for secure file uploads to cloud storage
 </Card>
 

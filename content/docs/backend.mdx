@@ -2,7 +2,18 @@
 title: Backend Setup
 ---
 
-## Components Configuration
+This must be in your `tsconfig.json` file. Configure it to match your file structure. You may want to point it to `"@/*": ["./src/*"]`
+
+```json
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
+```
+
+## shadcn Configuration
 
 Create a `components.json` file in the root of your backend folder with the following contents:
 
