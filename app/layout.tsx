@@ -23,8 +23,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: 'https://images.utilcn.dev/og-image.png',
-        width: 1330,
-        height: 400,
+        width: 500,
+        height: 180,
         alt: 'utilcn - Utility Functions Registry',
       },
     ],
