@@ -1,0 +1,417 @@
+---
+title: uploadMultipleFiles
+description: A React component for uploading multiple files with drag & drop, progress tracking, and file previews
+---
+
+<Callout title="Origin UI Integration" type="note">
+  This component uses the **multiple file upload with progress track** design from [Origin UI](https://originui.com/file-upload) and integrates it with the `generatePresignedUploadUrl` API to provide real progress tracking and actual file uploads to cloud storage buckets.
+</Callout>
+
+<Callout title="Frontend Implementation" type="info">
+  This component is designed for **frontend use** and handles multiple file uploads through presigned URLs. It pairs with the `generatePresignedUploadUrl` function which should be implemented on your backend server to generate secure upload URLs.
+</Callout>
+
+## Usage
+
+### Component
+
+```tsx
+import { UploadMultipleFiles } from '@/lib/upload-multiple-files';
+
+export function MyPage() {
+  return (
+    <div>
+      <h2>Upload your files</h2>
+      <UploadMultipleFiles />
+    </div>
+  );
+}
+```
+
+## Installation
+
+<InstallTabs component="upload-multiple-files" />
+
+## Hook Integration
+
+## API Integration
+
+<Card title="generatePresignedUploadUrl" href="/docs/storage/generate-presigned-upload-url">
+  Generate presigned URLs for secure file uploads to cloud storage
+</Card>
+
+## Implementation
+
+```tsx
+import {
+  AlertCircleIcon,
+  FileArchiveIcon,
+  FileIcon,
+  FileSpreadsheetIcon,
+  FileTextIcon,
+  HeadphonesIcon,
+  ImageIcon,
+  Trash2Icon,
+  UploadIcon,
+  VideoIcon,
+  XIcon,
+} from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  type FileWithPreview,
+  formatBytes,
+  useFileUpload,
+} from '@/hooks/use-file-upload';
+import { useUploadFile } from '@/registry/default/storage/use-upload-file';
+
+const getFileIcon = (file: { file: File | { type: string; name: string } }) => {
+  const fileType = file.file instanceof File ? file.file.type : file.file.type;
+  const fileName = file.file instanceof File ? file.file.name : file.file.name;
+
+  const iconMap = {
+    pdf: {
+      icon: FileTextIcon,
+      conditions: (type: string, name: string) =>
+        type.includes('pdf') ||
+        name.endsWith('.pdf') ||
+        type.includes('word') ||
+        name.endsWith('.doc') ||
+        name.endsWith('.docx'),
+    },
+    archive: {
+      icon: FileArchiveIcon,
+      conditions: (type: string, name: string) =>
+        type.includes('zip') ||
+        type.includes('archive') ||
+        name.endsWith('.zip') ||
+        name.endsWith('.rar'),
+    },
+    excel: {
+      icon: FileSpreadsheetIcon,
+      conditions: (type: string, name: string) =>
+        type.includes('excel') ||
+        name.endsWith('.xls') ||
+        name.endsWith('.xlsx'),
+    },
+    video: {
+      icon: VideoIcon,
+      conditions: (type: string) => type.includes('video/'),
+    },
+    audio: {
+      icon: HeadphonesIcon,
+      conditions: (type: string) => type.includes('audio/'),
+    },
+    image: {
+      icon: ImageIcon,
+      conditions: (type: string) => type.startsWith('image/'),
+    },
+  };
+
+  for (const { icon: Icon, conditions } of Object.values(iconMap)) {
+    if (conditions(fileType, fileName)) {
+      return <Icon className="size-5 opacity-60" />;
+    }
+  }
+
+  return <FileIcon className="size-5 opacity-60" />;
+};
+
+const getFilePreview = (file: {
+  file: File | { type: string; name: string; url?: string };
+}) => {
+  const fileType = file.file instanceof File ? file.file.type : file.file.type;
+  const fileName = file.file instanceof File ? file.file.name : file.file.name;
+
+  const renderImage = (src: string) => (
+    <img
+      alt={fileName}
+      className="size-full rounded-t-[inherit] object-cover"
+      src={src}
+    />
+  );
+
+  return (
+    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-t-[inherit] bg-accent">
+      {fileType.startsWith('image/') ? (
+        file.file instanceof File ? (
+          (() => {
+            const previewUrl = URL.createObjectURL(file.file);
+            return renderImage(previewUrl);
+          })()
+        ) : file.file.url ? (
+          renderImage(file.file.url)
+        ) : (
+          <ImageIcon className="size-5 opacity-60" />
+        )
+      ) : (
+        getFileIcon(file)
+      )}
+    </div>
+  );
+};
+
+type UploadProgress = {
+  fileId: string;
+  progress: number;
+  completed: boolean;
+  error?: string;
+  fileUrl?: string;
+};
+
+const BYTES_PER_KB = 1024;
+const BYTES_PER_MB = BYTES_PER_KB * BYTES_PER_KB;
+const MAX_SIZE_MB = 5;
+const MAX_FILES = 6;
+
+type FileItemProps = {
+  file: FileWithPreview;
+  uploadProgress?: UploadProgress;
+  onRemove: (fileId: string) => void;
+};
+
+const FileItem = ({ file, uploadProgress, onRemove }: FileItemProps) => {
+  const isUploading = uploadProgress && !uploadProgress.completed;
+
+  return (
+    <div
+      className="flex flex-col gap-1 rounded-lg border bg-background p-2 pe-3 transition-opacity duration-300"
+      data-uploading={isUploading || undefined}
+    >
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-3 overflow-hidden in-data-[uploading=true]:opacity-50">
+          <div className="flex aspect-square size-10 shrink-0 items-center justify-center overflow-hidden rounded border">
+            {(file.file instanceof File
+              ? file.file.type
+              : file.file.type
+            ).startsWith('image/')
+              ? getFilePreview(file)
+              : getFileIcon(file)}
+          </div>
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <p className="truncate font-medium text-[13px]">
+              {file.file instanceof File ? file.file.name : file.file.name}
+            </p>
+            <p className="text-muted-foreground text-xs">
+              {formatBytes(
+                file.file instanceof File ? file.file.size : file.file.size,
+              )}
+            </p>
+          </div>
+        </div>
+        <Button
+          aria-label="Remove file"
+          className="-me-2 size-8 text-muted-foreground/80 hover:bg-transparent hover:text-foreground"
+          onClick={() => onRemove(file.id)}
+          size="icon"
+          variant="ghost"
+        >
+          <XIcon aria-hidden="true" className="size-4" />
+        </Button>
+      </div>
+
+      {uploadProgress &&
+        (() => {
+          const progress = uploadProgress.progress || 0;
+          const completed = uploadProgress.completed;
+          const hasError = uploadProgress.error;
+
+          if (completed && !hasError) {
+            return null;
+          }
+
+          return (
+            <div className="mt-1 flex items-center gap-2">
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                <div
+                  className={`h-full transition-all duration-300 ease-out ${
+                    hasError ? 'bg-destructive' : 'bg-primary'
+                  }`}
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <span className="w-10 text-muted-foreground text-xs tabular-nums">
+                {hasError ? 'Error' : `${progress}%`}
+              </span>
+            </div>
+          );
+        })()}
+    </div>
+  );
+};
+
+export default function UploadMultipleFiles() {
+  const maxSize = MAX_SIZE_MB * BYTES_PER_MB;
+
+  const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
+  const { uploadFile } = useUploadFile();
+
+  const handleFilesAdded = (addedFiles: FileWithPreview[]) => {
+    const newProgressItems = addedFiles.map((file) => ({
+      fileId: file.id,
+      progress: 0,
+      completed: false,
+    }));
+
+    setUploadProgress((prev) => [...prev, ...newProgressItems]);
+
+    for (const file of addedFiles) {
+      if (file.file instanceof File) {
+        uploadFile({
+          file: file.file,
+          onProgress: (progress) => {
+            setUploadProgress((prev) =>
+              prev.map((item) =>
+                item.fileId === file.id ? { ...item, progress } : item,
+              ),
+            );
+          },
+          onSuccess: (fileUrl) => {
+            setUploadProgress((prev) =>
+              prev.map((item) =>
+                item.fileId === file.id
+                  ? { ...item, completed: true, fileUrl }
+                  : item,
+              ),
+            );
+          },
+          onError: (error) => {
+            setUploadProgress((prev) =>
+              prev.map((item) =>
+                item.fileId === file.id
+                  ? { ...item, error: error.message, completed: true }
+                  : item,
+              ),
+            );
+          },
+        });
+      }
+    }
+  };
+
+  const handleFileRemoved = (fileId: string) => {
+    setUploadProgress((prev) => prev.filter((item) => item.fileId !== fileId));
+  };
+
+  const [
+    { files, isDragging, errors },
+    {
+      handleDragEnter,
+      handleDragLeave,
+      handleDragOver,
+      handleDrop,
+      openFileDialog,
+      removeFile,
+      clearFiles,
+      getInputProps,
+    },
+  ] = useFileUpload({
+    multiple: true,
+    maxFiles: MAX_FILES,
+    maxSize,
+    onFilesAdded: handleFilesAdded,
+  });
+
+  return (
+    <div className="flex flex-col gap-2">
+      {/* Drop area */}
+      <div
+        className="relative flex min-h-52 flex-col items-center not-data-[files]:justify-center overflow-hidden rounded-xl border border-input border-dashed p-4 transition-colors has-[input:focus]:border-ring has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 data-[dragging=true]:bg-accent/50"
+        data-dragging={isDragging || undefined}
+        data-files={files.length > 0 || undefined}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openFileDialog();
+          }
+        }}
+      >
+        <input
+          {...getInputProps()}
+          aria-label="Upload image file"
+          className="sr-only"
+        />
+        {files.length > 0 ? (
+          <div className="flex w-full flex-col gap-3">
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="truncate font-medium text-sm">
+                Files ({files.length})
+              </h3>
+              <div className="flex gap-2">
+                <Button onClick={openFileDialog} size="sm" variant="outline">
+                  <UploadIcon
+                    aria-hidden="true"
+                    className="-ms-0.5 size-3.5 opacity-60"
+                  />
+                  Add files
+                </Button>
+                <Button
+                  onClick={() => {
+                    setUploadProgress([]);
+                    clearFiles();
+                  }}
+                  size="sm"
+                  variant="outline"
+                >
+                  <Trash2Icon
+                    aria-hidden="true"
+                    className="-ms-0.5 size-3.5 opacity-60"
+                  />
+                  Remove all
+                </Button>
+              </div>
+            </div>
+
+            <div className="w-full space-y-2">
+              {files.map((file) => (
+                <FileItem
+                  file={file}
+                  key={file.id}
+                  onRemove={(fileId) => {
+                    handleFileRemoved(fileId);
+                    removeFile(fileId);
+                  }}
+                  uploadProgress={uploadProgress.find(
+                    (p) => p.fileId === file.id,
+                  )}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
+            <div
+              aria-hidden="true"
+              className="mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border bg-background"
+            >
+              <ImageIcon className="size-4 opacity-60" />
+            </div>
+            <p className="mb-1.5 font-medium text-sm">Drop your files here</p>
+            <p className="text-muted-foreground text-xs">
+              Max {MAX_FILES} files ∙ Up to {MAX_SIZE_MB}MB
+            </p>
+            <Button className="mt-4" onClick={openFileDialog} variant="outline">
+              <UploadIcon aria-hidden="true" className="-ms-1 opacity-60" />
+              Select files
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {errors.length > 0 && (
+        <div
+          className="flex items-center gap-1 text-destructive text-xs"
+          role="alert"
+        >
+          <AlertCircleIcon className="size-3 shrink-0" />
+          <span>{errors[0]}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+```

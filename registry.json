@@ -218,6 +218,26 @@
           "target": "~/env-server.ts"
         }
       ]
+    },
+    {
+      "name": "upload-multiple-files",
+      "type": "registry:component",
+      "title": "Upload Multiple Files",
+      "description": "Upload multiple files to a storage provider using a presigned upload URL.",
+      "docs": "This component downloads `comp-553.tsx` from Origin UI. We are using the Origin UI registry for the `use-file-upload.ts` hook. You can delete `comp-553.tsx` after downloading it. This component pairs nicely with the `generate-presigned-upload-url` item from this registry to generate a presigned upload URL for a file.",
+      "registryDependencies": [
+        "https://originui.com/r/comp-553.json"
+      ],
+      "files": [
+        {
+          "path": "registry/default/storage/upload-multiple-files.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/default/storage/use-upload-file.ts",
+          "type": "registry:hook"
+        }
+      ]
     }
   ]
 }

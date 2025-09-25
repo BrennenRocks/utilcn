@@ -12,7 +12,7 @@ description: A React component and hook for file uploads with progress tracking
 ### Component
 
 ```tsx
-import { UploadFile } from '@/components/upload-file';
+import { UploadFile } from '@/lib/upload-file';
 
 export function MyPage() {
   return (
@@ -30,16 +30,15 @@ export function MyPage() {
 import { useUploadFile } from '@/hooks/use-upload-file';
 
 export function CustomUploadComponent() {
-  const uploadFile = useUploadFile();
+  const { uploadFile } = useUploadFile();
 
   const handleUpload = (file: File) => {
-    uploadFile.mutate(
-      { file },
-      {
-        onSuccess: (url) => console.log('Uploaded to:', url),
-        onError: (err) => console.error('Upload failed:', err),
-      }
-    );
+    uploadFile({
+      file,
+      onSuccess: (url) => console.log('Uploaded to:', url),
+      onError: (err) => console.error('Upload failed:', err),
+      onProgress: (percent) => console.log(`Progress: ${percent}%`),
+    });
   };
 
   return (
@@ -62,22 +61,20 @@ export function CustomUploadComponent() {
 
 ### Parameters
 
-The `useUploadFile` hook returns a mutation object that accepts:
+The `useUploadFile` hook returns an object with an `uploadFile` function that accepts:
 
 | Parameter    | Type                              | Description                           |
 |--------------|-----------------------------------|---------------------------------------|
 | `file`       | `File`                           | The file to upload                    |
 | `onProgress` | `(percent: number) => void`      | Optional progress callback            |
+| `onSuccess`  | `(fileUrl: string) => void`      | Optional success callback with file URL |
+| `onError`    | `(error: Error) => void`         | Optional error callback               |
 
 ## API Integration
 
 <Card title="generatePresignedUploadUrl" href="/docs/storage/generate-presigned-upload-url">
   Generate presigned URLs for secure file uploads to cloud storage
 </Card>
-
-## Dependencies
-
-- `@tanstack/react-query` - For mutation management
 
 ## Implementation
 
@@ -91,101 +88,128 @@ import { useUploadFile } from '@/hooks/use-upload-file';
 
 export function UploadFile() {
   const [progress, setProgress] = useState(0);
-  const uploadFile = useUploadFile();
+  const [isUploading, setIsUploading] = useState(false);
+  const { uploadFile } = useUploadFile();
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
-    uploadFile.mutate(
-      { file, onProgress: (p) => setProgress(p) },
-      {
-        onSuccess: (url) => {
-          console.log('Uploaded to:', url);
-        },
-        onError: (err) => {
-          console.error(`Upload failed: ${(err as Error).message}`);
-        },
-        onSettled: () => setProgress(0),
+    setIsUploading(true);
+    uploadFile({
+      file,
+      onProgress: (p: number) => setProgress(p),
+      onSuccess: (url: string) => {
+        console.log('Uploaded to:', url);
+        setIsUploading(false);
+        setProgress(0);
       },
-    );
+      onError: (err: Error) => {
+        console.error(`Upload failed: ${err.message}`);
+        setIsUploading(false);
+        setProgress(0);
+      },
+    });
   };
 
   return (
     <div className="flex flex-col gap-4">
       <input
-        type="file"
+        className="file:mr-4 file:rounded-md file:border-0 file:bg-secondary file:px-4 file:py-2 file:font-semibold file:text-secondary-foreground file:text-sm hover:file:bg-secondary/80"
         onChange={handleFileChange}
-        className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-secondary-foreground hover:file:bg-secondary/80"
+        type="file"
       />
 
-      {uploadFile.isPending && (
+      {isUploading && (
         <div className="mt-4 flex items-center gap-2">
-          <div className="w-full h-2 bg-secondary rounded-full">
+          <div className="h-2 w-full rounded-full bg-secondary">
             <div
-              className="h-2 bg-primary rounded-full transition-all duration-300"
+              className="h-2 rounded-full bg-primary transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-sm text-muted-foreground">{progress}%</span>
+          <span className="text-muted-foreground text-sm">{progress}%</span>
         </div>
       )}
     </div>
   );
 }
-
 ```
 
 ### useUploadFile Hook
 
 ```tsx
-import { useMutation } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 type UploadArgs = {
   file: File;
   onProgress?: (percent: number) => void;
+  onSuccess?: (fileUrl: string) => void;
+  onError?: (error: Error) => void;
 };
 
 export function useUploadFile() {
-  return useMutation({
-    mutationFn: async ({ file, onProgress }: UploadArgs) => {
-      const presignRes = await fetch('/api/uploads/presign', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fileName: file.name,
-          contentLength: file.size,
-        }),
-      });
+  const uploadFile = useCallback(
+    async ({ file, onProgress, onSuccess, onError }: UploadArgs) => {
+      try {
+        const presignRes = await fetch('http://localhost:8080/uploadFile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fileName: file.name,
+            contentLength: file.size,
+          }),
+        });
 
-      if (!presignRes.ok) throw new Error('Failed to get presigned URL');
-      const presign = await presignRes.json();
+        if (!presignRes.ok) {
+          throw new Error('Failed to get presigned URL');
+        }
+        const presign = await presignRes.json();
 
-      await new Promise<void>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('PUT', presign.uploadUrl);
+        await new Promise<void>((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('PUT', presign.uploadUrl);
 
-        xhr.setRequestHeader('Content-Type', file.type);
+          xhr.setRequestHeader('Content-Type', file.type);
 
-        xhr.upload.onprogress = (evt) => {
-          if (evt.lengthComputable && onProgress) {
-            const percent = Math.round((evt.loaded * 100) / evt.total);
-            onProgress(percent);
-          }
-        };
+          xhr.upload.onprogress = (evt) => {
+            if (evt.lengthComputable && onProgress) {
+              const PERCENTAGE_MULTIPLIER = 100;
+              const percent = Math.round(
+                (evt.loaded * PERCENTAGE_MULTIPLIER) / evt.total,
+              );
+              onProgress(percent);
+            }
+          };
 
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) resolve();
-          else reject(new Error('Upload failed'));
-        };
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              resolve();
+            } else {
+              reject(new Error('Upload failed'));
+            }
+          };
 
-        xhr.onerror = () => reject(new Error('Upload failed'));
-        xhr.send(file);
-      });
+          xhr.onerror = () => reject(new Error('Upload failed'));
+          xhr.send(file);
+        });
 
-      return presign.fileUrl as string;
+        const fileUrl = presign.fileUrl as string;
+        onSuccess?.(fileUrl);
+        return fileUrl;
+      } catch (error) {
+        const uploadError =
+          error instanceof Error ? error : new Error('Upload failed');
+        onError?.(uploadError);
+        throw uploadError;
+      }
     },
-  });
+    [],
+  );
+
+  return { uploadFile };
 }
 
 ```
