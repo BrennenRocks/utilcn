@@ -117,10 +117,7 @@
       "title": "Generate Presigned Download URL",
       "description": "Generate a presigned download URL for a file.",
       "docs": "Remember to configure CORS settings in your S3 bucket or compatible storage provider to allow downloads from your application's domain. This is required for the presigned URL downloads to work correctly. This function pairs nicely with the `download-file` item from this registry to generate a presigned download URL for a file.",
-      "dependencies": [
-        "@aws-sdk/client-s3",
-        "@aws-sdk/s3-request-presigner"
-      ],
+      "dependencies": ["@aws-sdk/client-s3", "@aws-sdk/s3-request-presigner"],
       "files": [
         {
           "path": "registry/default/storage/generate-presigned-download-url.ts",
@@ -146,10 +143,7 @@
         "S3_BUCKET_NAME": "<name of the S3 bucket>",
         "S3_PUBLIC_URL": "<public URL for accessing uploaded files>"
       },
-      "dependencies": [
-        "@aws-sdk/client-s3",
-        "@aws-sdk/s3-request-presigner"
-      ],
+      "dependencies": ["@aws-sdk/client-s3", "@aws-sdk/s3-request-presigner"],
       "files": [
         {
           "path": "registry/default/storage/generate-presigned-upload-url.ts",
@@ -167,10 +161,7 @@
       "title": "Download A File From Storage",
       "description": "Download a file from a storage provider using a presigned download URL.",
       "docs": "This component pairs nicely with the `generate-presigned-download-url` item from this registry to generate a presigned download URL for a file.",
-      "dependencies": [
-        "@tanstack/react-query",
-        "lucide-react"
-      ],
+      "dependencies": ["@tanstack/react-query", "lucide-react"],
       "files": [
         {
           "path": "registry/default/storage/download-file.tsx",
@@ -188,9 +179,7 @@
       "title": "Upload A File To Storage",
       "description": "Upload a file to a storage provider using a presigned upload URL.",
       "docs": "This component pairs nicely with the `generate-presigned-upload-url` item from this registry to generate a presigned upload URL for a file.",
-      "dependencies": [
-        "@tanstack/react-query"
-      ],
+      "dependencies": ["@tanstack/react-query"],
       "files": [
         {
           "path": "registry/default/storage/upload-file.tsx",
@@ -208,9 +197,7 @@
       "title": "Environment Server Configuration",
       "description": "Environment variable validation schema using Zod for server configuration",
       "docs": "You will need to update `env-server.ts` to match your environment variables.",
-      "dependencies": [
-        "zod"
-      ],
+      "dependencies": ["zod"],
       "files": [
         {
           "path": "registry/default/secrets/env-server.ts",
@@ -225,9 +212,7 @@
       "title": "Upload Multiple Files",
       "description": "Upload multiple files to a storage provider using a presigned upload URL.",
       "docs": "This component downloads `comp-553.tsx` from Origin UI. We are using the Origin UI registry for the `use-file-upload.ts` hook. You can delete `comp-553.tsx` after downloading it. This component pairs nicely with the `generate-presigned-upload-url` item from this registry to generate a presigned upload URL for a file.",
-      "registryDependencies": [
-        "https://originui.com/r/comp-553.json"
-      ],
+      "registryDependencies": ["https://originui.com/r/comp-553.json"],
       "files": [
         {
           "path": "registry/default/storage/upload-multiple-files.tsx",
@@ -253,10 +238,7 @@
         "react-dom",
         "vite"
       ],
-      "registryDependencies": [
-        "card",
-        "skeleton"
-      ],
+      "registryDependencies": ["card", "skeleton"],
       "files": [
         {
           "path": "registry/default/chatgpt-app/index.jsx",
@@ -303,15 +285,12 @@
       "title": "ChatGPT MCP Backend",
       "description": "MCP server bootstrap, widget asset builder, and tool registration for the ChatGPT widget.",
       "docs": "Install this block into your backend project. Run the `build-chatgpt-widgets.ts` script from the frontend block to prebuild widget assets before starting `server.ts`. Use the `tools/add.ts` tool to register the sample addition tool with your MCP server.",
-      "dependencies": [
-        "@modelcontextprotocol/sdk",
-        "zod"
-      ],
+      "dependencies": ["@modelcontextprotocol/sdk", "zod@3"],
       "files": [
         {
-          "path": "registry/default/chatgpt-app/server.ts",
+          "path": "registry/default/chatgpt-app/mcp-server.ts",
           "type": "registry:file",
-          "target": "server.ts"
+          "target": "src/mcp-server.ts"
         },
         {
           "path": "registry/default/chatgpt-app/widget-util.ts",

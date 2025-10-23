@@ -8,7 +8,7 @@ import { URL } from 'node:url';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
 
-import { registerAdd } from 'registry/default/chatgpt-app/add';
+import { registerAdd } from '@/registry/default/chatgpt-app/add';
 
 function createUtilCnServer(): McpServer {
   const server = new McpServer({

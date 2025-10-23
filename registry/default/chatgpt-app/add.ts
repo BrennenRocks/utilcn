@@ -5,7 +5,7 @@ import {
   registerWidgetResource,
   type UtilCnWidget,
   widgetMeta,
-} from './widget-util';
+} from '@/registry/default/chatgpt-app/widget-util';
 
 const addInputSchema = {
   type: 'object',
@@ -50,7 +50,7 @@ export function registerAdd(server: McpServer) {
       },
       _meta: widgetMeta(addWidget),
     },
-    async (args) => {
+    (args) => {
       const typedArgs = addInputParser.parse(args);
 
       const sum = typedArgs.a + typedArgs.b;
