@@ -238,6 +238,91 @@
           "type": "registry:hook"
         }
       ]
+    },
+    {
+      "name": "chatgpt-app",
+      "type": "registry:block",
+      "title": "ChatGPT Widget Frontend",
+      "description": "Frontend widget implementation, build script, types, and hooks for embedding a ChatGPT MCP widget.",
+      "docs": "Install this block in your widget bundle to render the ChatGPT MCP example UI and bundle the widget assets. Pair it with the `chatgpt-app-backend` block to get the MCP server and tool registration script.",
+      "dependencies": [
+        "@tailwindcss/vite",
+        "@vitejs/plugin-react",
+        "fast-glob",
+        "react",
+        "react-dom",
+        "vite"
+      ],
+      "registryDependencies": [
+        "card",
+        "skeleton"
+      ],
+      "files": [
+        {
+          "path": "registry/default/chatgpt-app/index.jsx",
+          "type": "registry:component",
+          "target": "src/components/add/index.jsx"
+        },
+        {
+          "path": "registry/default/chatgpt-app/build-chatgpt-widgets.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/default/chatgpt-app/chatgpt-types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/default/chatgpt-app/media-queries.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/default/chatgpt-app/use-openai-global.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/default/chatgpt-app/use-display-mode.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/default/chatgpt-app/use-max-height.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/default/chatgpt-app/use-widget-props.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "registry/default/chatgpt-app/use-widget-state.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "chatgpt-app-backend",
+      "type": "registry:block",
+      "title": "ChatGPT MCP Backend",
+      "description": "MCP server bootstrap, widget asset builder, and tool registration for the ChatGPT widget.",
+      "docs": "Install this block into your backend project. Run the `build-chatgpt-widgets.ts` script from the frontend block to prebuild widget assets before starting `server.ts`. Use the `tools/add.ts` tool to register the sample addition tool with your MCP server.",
+      "dependencies": [
+        "@modelcontextprotocol/sdk",
+        "zod"
+      ],
+      "files": [
+        {
+          "path": "registry/default/chatgpt-app/server.ts",
+          "type": "registry:file",
+          "target": "server.ts"
+        },
+        {
+          "path": "registry/default/chatgpt-app/widget-util.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/default/chatgpt-app/add.ts",
+          "type": "registry:file",
+          "target": "tools/add.ts"
+        }
+      ]
     }
   ]
 }

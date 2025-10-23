@@ -3,7 +3,7 @@ import {
   type OpenAiGlobals,
   SET_GLOBALS_EVENT_TYPE,
   type SetGlobalsEvent,
-} from './types';
+} from './chatgpt-types';
 
 export function useOpenAiGlobal<K extends keyof OpenAiGlobals>(
   key: K,
