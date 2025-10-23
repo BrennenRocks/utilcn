@@ -23,7 +23,7 @@ export type UtilCnWidget = {
 };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT_DIR = path.resolve(__dirname, '..', '..');
+const ROOT_DIR = path.resolve(__dirname, '..', '..'); // <-- TODO: Get to the root of your project
 const ASSETS_DIR = path.resolve(ROOT_DIR, 'assets');
 
 export function buildWidgetHtml(componentName: string): string {

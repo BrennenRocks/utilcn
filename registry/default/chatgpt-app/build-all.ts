@@ -1,11 +1,11 @@
-import { build, type InlineConfig, type Plugin } from 'vite';
 import crypto from 'node:crypto';
-import fg from 'fast-glob';
 import fs from 'node:fs';
 import path from 'node:path';
-import pkg from '../../../package.json' with { type: 'json' };
-import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import fg from 'fast-glob';
+import { build, type InlineConfig, type Plugin } from 'vite';
+import pkg from '../../../package.json' with { type: 'json' }; // <-- TODO: Get to the package.json of your project
 
 const entries = fg.sync('src/**/index.{tsx,jsx}');
 const outDir = 'assets';

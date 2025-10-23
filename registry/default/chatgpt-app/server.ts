@@ -133,7 +133,7 @@ httpServer.on('clientError', (err: Error, socket) => {
 });
 
 httpServer.listen(port, () => {
-  console.log(`LeaseEnd MCP server listening on http://localhost:${port}`);
+  console.log(`UtilCN MCP server listening on http://localhost:${port}`);
   console.log(`  SSE stream: GET http://localhost:${port}${ssePath}`);
   console.log(
     `  Message post endpoint: POST http://localhost:${port}${postPath}?sessionId=...`,
