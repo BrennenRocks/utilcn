@@ -23,8 +23,7 @@ export type UtilCnWidget = {
 };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT_DIR = path.resolve(__dirname, '..', '..'); // <-- TODO: Get to the root of your project
-const ASSETS_DIR = path.resolve(ROOT_DIR, 'assets');
+const ASSETS_DIR = path.resolve(__dirname, '..', '..', '..', 'web', 'assets'); // <-- TODO: Get to the built chatgpt `assets` directory of your project which will appear after running `pnpm run build` in your front end project
 
 export function buildWidgetHtml(componentName: string): string {
   if (!fs.existsSync(ASSETS_DIR)) {
