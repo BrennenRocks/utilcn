@@ -1,6 +1,6 @@
 import { type SetStateAction, useCallback, useEffect, useState } from 'react';
-import type { UnknownObject } from './chatgpt-types';
-import { useOpenAiGlobal } from './use-openai-global';
+import type { UnknownObject } from '@/registry/default/chatgpt-app/chatgpt-types';
+import { useOpenAiGlobal } from '@/registry/default/chatgpt-app/use-openai-global';
 
 export function useWidgetState<T extends UnknownObject>(
   defaultState: T | (() => T),

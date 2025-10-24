@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useWidgetProps } from '../use-widget-props';
+import { useWidgetProps } from '@/registry/default/chatgpt-app/use-widget-props';
 
 function App() {
   const { a, b, sum } = useWidgetProps({

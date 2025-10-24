@@ -1,4 +1,4 @@
-import { useOpenAiGlobal } from './use-openai-global';
+import { useOpenAiGlobal } from '@/registry/default/chatgpt-app/use-openai-global';
 
 export function useWidgetProps<T extends Record<string, unknown>>(
   defaultState?: T | (() => T),

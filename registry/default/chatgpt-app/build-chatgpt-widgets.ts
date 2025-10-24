@@ -1,18 +1,25 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import fg from 'fast-glob';
 import { build, type InlineConfig, type Plugin } from 'vite';
 import pkg from '../../../package.json' with { type: 'json' }; // <-- TODO: Get to the package.json of your project
 
-const entries = fg.sync('src/**/index.{tsx,jsx}');
-const outDir = 'assets';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const projectRoot = path.resolve(__dirname, '..', '..'); // <-- TODO: Get to the root of your project
+
+const entries = fg.sync('src/**/index.{tsx,jsx}', {
+  cwd: projectRoot,
+  absolute: true,
+});
+const outDir = path.join(projectRoot, 'assets');
 
 const PER_ENTRY_CSS_GLOB = '**/*.{css,pcss,scss,sass}';
 const PER_ENTRY_CSS_IGNORE = '**/*.module.*'.split(',').map((s) => s.trim());
-const GLOBAL_CSS_LIST = [path.resolve('src/index.css')];
+const GLOBAL_CSS_LIST = [path.join(projectRoot, 'src/index.css')];
 
 const targets: string[] = ['add'];
 const builtNames: string[] = [];
@@ -58,6 +65,7 @@ function wrapEntryPlugin(
 }
 
 fs.rmSync(outDir, { recursive: true, force: true });
+fs.mkdirSync(outDir, { recursive: true });
 
 for (const file of entries) {
   const name = path.basename(path.dirname(file));
@@ -87,6 +95,7 @@ for (const file of entries) {
   const virtualId = `\0virtual-entry:${entryAbs}`;
 
   const createConfig = (): InlineConfig => ({
+    root: projectRoot,
     plugins: [
       wrapEntryPlugin(virtualId, entryAbs, cssToInclude),
       tailwindcss(),
@@ -122,7 +131,7 @@ for (const file of entries) {
           assetFileNames: (info) =>
             (info.name || '').endsWith('.css')
               ? `${name}.css`
-              : `[name]-[hash][extname]`,
+              : '[name]-[hash][extname]',
         },
         preserveEntrySignatures: 'allow-extension',
         treeshake: true,
@@ -137,11 +146,13 @@ for (const file of entries) {
   console.log(`Built ${name}`);
 }
 
-const outputs = fs
-  .readdirSync('assets')
-  .filter((f) => f.endsWith('.js') || f.endsWith('.css'))
-  .map((f) => path.join('assets', f))
-  .filter((p) => fs.existsSync(p));
+const outputs = fs.existsSync(outDir)
+  ? fs
+      .readdirSync(outDir)
+      .filter((f) => f.endsWith('.js') || f.endsWith('.css'))
+      .map((f) => path.join(outDir, f))
+      .filter((p) => fs.existsSync(p))
+  : [];
 
 const renamed = [];
 

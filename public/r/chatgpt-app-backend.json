@@ -27,5 +27,5 @@
       "target": "tools/add.ts"
     }
   ],
-  "docs": "Install this block into your backend project. Run the `build-chatgpt-widgets.ts` script from the frontend block to prebuild widget assets before starting `server.ts`. Use the `tools/add.ts` tool to register the sample addition tool with your MCP server."
+  "docs": "Install this block into your backend project. Run the `build-chatgpt-widgets.ts` script from the frontend block to prebuild widget assets before starting `mcp-server.ts`. Use the `tools/add.ts` tool to register the sample addition tool with your MCP server."
 }

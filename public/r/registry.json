@@ -284,7 +284,7 @@
       "type": "registry:block",
       "title": "ChatGPT MCP Backend",
       "description": "MCP server bootstrap, widget asset builder, and tool registration for the ChatGPT widget.",
-      "docs": "Install this block into your backend project. Run the `build-chatgpt-widgets.ts` script from the frontend block to prebuild widget assets before starting `server.ts`. Use the `tools/add.ts` tool to register the sample addition tool with your MCP server.",
+      "docs": "Install this block into your backend project. Run the `build-chatgpt-widgets.ts` script from the frontend block to prebuild widget assets before starting `mcp-server.ts`. Use the `tools/add.ts` tool to register the sample addition tool with your MCP server.",
       "dependencies": ["@modelcontextprotocol/sdk", "zod@3"],
       "files": [
         {
