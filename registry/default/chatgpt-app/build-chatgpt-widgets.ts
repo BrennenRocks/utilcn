@@ -9,7 +9,7 @@ import { build, type InlineConfig, type Plugin } from 'vite';
 import pkg from '../../../package.json' with { type: 'json' }; // <-- TODO: Get to the package.json of your project
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const projectRoot = path.resolve(__dirname, '..', '..'); // <-- TODO: Get to the root of your project
+const projectRoot = path.resolve(__dirname, '..', '..'); // <-- TODO: Get to where you want your built `assets` directory to appear
 
 const entries = fg.sync('src/**/index.{tsx,jsx}', {
   cwd: projectRoot,
