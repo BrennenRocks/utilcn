@@ -1,0 +1,109 @@
+---
+title: ChatGPT Frontend
+description: Widget bundle, hooks, and build workflow for the ChatGPT MCP frontend.
+---
+
+<Callout title="Frontend Widget Bundle" type="info">
+  This package renders the ChatGPT widget UI and ships the hooks required by the MCP runtime. Pair it with the <Link href="/docs/chatgpt-app/backend">backend block</Link> to expose the widget through an MCP server.
+</Callout>
+
+## Overview
+
+The frontend block installs a widget entry point (`index.jsx`), shared hooks, and a Vite build script that generates the static assets ChatGPT loads inside the MCP widget iframe. Install the block and run the build script whenever you change the widget UI so the backend can serve the latest HTML, CSS, and JavaScript bundle.
+
+<InstallTabs component="chatgpt-app" />
+
+## Project Files
+
+- `src/components/add/index.jsx` React Component that displays the tool output passed in through `useWidgetProps`.
+- `src/lib/build-chatgpt-widgets.ts` Builds the React Components, hashes the outputs (ChatGPT Apps aggresively cache your components. You'll want new hashes for each build), and emits HTML wrappers in `assets/`.
+- `src/lib/chatgpt-types.ts` and `src/lib/use-openai-global.ts` bridge the widget with globals exposed by ChatGPT’s web sandbox.
+- Hooks such as `use-display-mode`, `use-max-height`, `use-widget-props`, and `use-widget-state` wrap the MCP globals so you can react to layout changes, persist state, and read structured tool output.
+
+## Update Project Paths
+
+The build script ships with TODO markers—update these before running it so the script points to your own workspace:
+
+`build-chatgpt-widgets.ts`
+```ts
+import pkg from '../../../package.json' with { type: 'json' }; // <-- update to your package.json
+const projectRoot = path.resolve(__dirname, '..', '..'); // <-- update to where you want your built `assets` directory to live
+```
+
+If your global CSS lives somewhere else (for example `src/styles/globals.css`), update the `GLOBAL_CSS_LIST` array accordingly.
+
+## Building Widget Assets
+
+1. Ensure the `targets` array lists every widget entry directory that has an `index.jsx` or `index.tsx`. The default bundle only builds the `add` widget.
+2. Run the build script from your frontend project root:
+
+(You should create a package.json script for this for ease of use)
+```bash
+# Go to folder with `build-chatgpt-widgets.ts`
+bun build-chatgpt-widgets.ts
+```
+
+or
+
+```bash
+pnpm tsx registry/default/chatgpt-app/build-chatgpt-widgets.ts
+```
+
+## Example Widget Entry
+
+`index.jsx` reads the tool output (`a`, `b`, and `sum`) and renders a card with fallbacks until the MCP runtime provides data:
+
+```tsx
+import { createRoot } from 'react-dom/client';
+import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useWidgetProps } from '@/registry/default/chatgpt-app/use-widget-props';
+
+function App() {
+  const { a, b, sum } = useWidgetProps({
+    a: null,
+    b: null,
+    sum: null,
+  });
+
+  const hasData = a !== null && b !== null && sum !== null;
+
+  return (
+    <div className="flex items-center justify-center w-full min-h-screen">
+      <Card className="w-full max-w-md p-6">
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold">Sum Calculator</h2>
+
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span>A:</span>
+              {hasData ? <span>{a}</span> : <Skeleton className="h-5 w-20" />}
+            </div>
+
+            <div className="flex justify-between">
+              <span>B:</span>
+              {hasData ? <span>{b}</span> : <Skeleton className="h-5 w-20" />}
+            </div>
+
+            <div className="flex justify-between font-bold">
+              <span>Sum:</span>
+              {hasData ? <span>{sum}</span> : <Skeleton className="h-5 w-20" />}
+            </div>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+createRoot(document.getElementById('add-root')).render(<App />);
+
+```
+
+You can extend the widget by registering additional hooks (for example `useDisplayMode`) or persisting UI state with `useWidgetState`.
+
+## Next Steps
+
+<Card title="ChatGPT MCP Backend" href="/docs/chatgpt-app/backend">
+  Install the backend block to host the widget assets and register MCP tools.
+</Card>

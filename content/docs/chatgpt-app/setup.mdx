@@ -1,0 +1,50 @@
+---
+title: Setup
+description: Configure your project to build and serve the ChatGPT MCP widget example.
+---
+
+<Callout title="Reference Implementation" type="info">
+  This block is adapted from the <Link href="https://github.com/openai/openai-apps-sdk-examples">openai-apps-sdk-examples</Link> repository and demonstrates how to expose a widget inside ChatGPT using the Apps SDK.
+</Callout>
+
+Before you install the frontend or backend blocks, read the official <Link href="https://developers.openai.com/apps-sdk">ChatGPT Apps SDK documentation</Link>. It covers the platform concepts, hosting requirements, and deployment workflow this example builds on.
+
+## What You Get
+
+This example ships a single MCP tool named `add`. The tool:
+
+- Accepts two numbers as input through the MCP request.
+- Returns the structured result `{ a, b, sum }`.
+- Triggers the accompanying widget to render the inputs and their sum inside ChatGPT.
+
+Once the frontend build script runs and the backend starts, ChatGPT will display a card that shows both operands and their computed sum when the `add` tool is invoked.
+
+## End-to-End Flow
+
+### Only personal paid ChatGPT Plans work. Business Accounts don't work yet
+### [Github Issue](https://github.com/openai/openai-apps-sdk-examples/issues/58#issuecomment-3422682581)
+
+1. **Install the frontend block.** Add the <Link href="/docs/chatgpt-app/frontend">chatgpt-app frontend</Link> to your project so you get `index.jsx`, the widget hooks, and `build-chatgpt-widgets.ts`.
+2. **Build the widget assets.** Run the build script to emit hashed HTML, CSS, and JS bundles under your configured `assets/` directory:
+
+   ```bash
+   pnpm tsx registry/default/chatgpt-app/build-chatgpt-widgets.ts
+   ```
+
+   Re-run this command whenever you change the widget UI.
+3. **Install the backend block.** Add the <Link href="/docs/chatgpt-app/backend">chatgpt-app-backend</Link> files so you can host `mcp-server.ts`, register the `add` tool, and serve the widget HTML.
+4. **Expose the MCP server.** Start `mcp-server.ts`, then use ngrok (or a similar tunnel) to forward the port:
+
+   ```bash
+   pnpm tsx registry/default/chatgpt-app/mcp-server.ts
+   ngrok http 8000
+   ```
+
+   Copy the HTTPS ngrok URL and note the `/mcp` SSE endpoint.
+5. **Connect the app inside ChatGPT.**
+   - In ChatGPT, open **Settings → Apps & Connectors**.
+   - Enable **Developer Mode**.
+   - Create a new app and set its URL to your ngrok endpoint, for example `https://your-ngrok-url/mcp`.
+6. **Test the experience.** Ask ChatGPT to use your new app. When the `add` tool runs, it will prompt for two numbers and render the widget that displays both inputs and their sum.
+
+![Add widget rendering](/add-widget.jpg)
