@@ -5,7 +5,7 @@
   "title": "Upload Multiple Files",
   "description": "Upload multiple files to a storage provider using a presigned upload URL.",
   "registryDependencies": [
-    "https://originui.com/r/comp-553.json"
+    "https://coss.com/origin/r/comp-553.json"
   ],
   "files": [
     {
@@ -19,5 +19,5 @@
       "type": "registry:hook"
     }
   ],
-  "docs": "This component downloads `comp-553.tsx` from Origin UI. We are using the Origin UI registry for the `use-file-upload.ts` hook. You can delete `comp-553.tsx` after downloading it. This component pairs nicely with the `generate-presigned-upload-url` item from this registry to generate a presigned upload URL for a file."
+  "docs": "This component downloads `comp-553.tsx` from coss. We are using the coss registry for the `use-file-upload.ts` hook. You can delete `comp-553.tsx` after downloading it. This component pairs nicely with the `generate-presigned-upload-url` item from this registry to generate a presigned upload URL for a file."
 }
