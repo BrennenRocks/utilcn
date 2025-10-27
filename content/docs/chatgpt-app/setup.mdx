@@ -28,7 +28,7 @@ Once the frontend build script runs and the backend starts, ChatGPT will display
 2. **Build the widget assets.** Run the build script to emit hashed HTML, CSS, and JS bundles under your configured `assets/` directory:
 
    ```bash
-   pnpm tsx registry/default/chatgpt-app/build-chatgpt-widgets.ts
+   pnpm tsx build-chatgpt-widgets.ts
    ```
 
    Re-run this command whenever you change the widget UI.
@@ -36,7 +36,7 @@ Once the frontend build script runs and the backend starts, ChatGPT will display
 4. **Expose the MCP server.** Start `mcp-server.ts`, then use ngrok (or a similar tunnel) to forward the port:
 
    ```bash
-   pnpm tsx registry/default/chatgpt-app/mcp-server.ts
+   pnpm tsx mcp-server.ts
    ngrok http 8000
    ```
 
