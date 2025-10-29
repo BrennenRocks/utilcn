@@ -1,7 +1,15 @@
 # utilcn
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+## Shadcn Registry
+
+utilcn is a fullstack shadcn registry
+
+- String helpers for common case transforms (camel, kebab, Pascal, snake), capitalization, repeating, reversing, and truncation (`registry/default/strings`).
+- Storage utilities for S3-style workflows: presigned upload/download URL builders, ready-made upload/download components, and React hooks for handling file transfers (`registry/default/storage`).
+- ChatGPT MCP widget blocks that bundle the frontend widget UI, build tooling, shared types/hooks, plus the matching backend server scaffold and sample MCP tool (`registry/default/chatgpt-app`).
+- A Zod-powered server environment validator template to bootstrap typed configuration (`registry/default/secrets/env-server.ts`).
+
+## Development
 
 Run development server:
 
@@ -27,6 +35,7 @@ In the project, you can see:
 | `app/(home)`              | The route group for your landing page and other pages. |
 | `app/docs`                | The documentation layout and pages.                    |
 | `app/api/search/route.ts` | The Route Handler for search.                          |
+
 
 ### Fumadocs MDX
 
