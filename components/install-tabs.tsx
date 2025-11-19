@@ -13,8 +13,7 @@ interface InstallTabsProps {
 }
 
 export function InstallTabs({ component }: InstallTabsProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_URL || '';
-  const componentPath = `${baseUrl}/r/${component}.json`;
+  const componentPath = `@utilcn/${component}`;
 
   return (
     <Tabs groupId="language" defaultValue="pnpm" persist>
